@@ -14,14 +14,9 @@
 
       string GuessNumber (string Guess, int n) {
          int.TryParse (Guess, out int Cutoff);
-         if (n==Cutoff) {
-            return "Congratulations! You've guessed it right!";
-         }
-         else if (n < Cutoff) {
-            return "You're too high! Try again";
-         }
-         else {
-            return "You're too low! Try again";
-         }
+         if (n==Cutoff) return "Congratulations! You've guessed it right!";
+         else if (n < Cutoff) return "You're too high! Try again";
+         else return "You're too low! Try again";
+         
       }
    
