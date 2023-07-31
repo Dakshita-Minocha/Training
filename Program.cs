@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 ﻿/// This program generates a random number from 1-maximum value and asks for user input to guess the number. 
 /// It has 3 modes, Easy, Medium, Hard based on which the mx value varies(10,100,1000 respectively)
 /// Compares the input to the generated number, and prompts the user accordingly. 
@@ -23,7 +24,9 @@ do{
          Console.WriteLine ("Congratulations! You've guessed it right!");
          break;
       } else Console.WriteLine ($"You're too {(random < guess ? "high" : "low")}! Try again");
+
    }
+<<<<<<< Updated upstream
    Console.WriteLine ("Would you like to play again?(y/n)");
    if (Console.ReadKey().Key==ConsoleKey.N) Environment.Exit (0);
 } while (true);
@@ -52,3 +55,4 @@ Mode GetMode(){
    
 }
 enum Mode { Easy, Medium, Hard};
+
