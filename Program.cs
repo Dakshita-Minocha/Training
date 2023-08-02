@@ -31,7 +31,7 @@ bool Check (string prompt) {
 void GuessNumberBinaryMSB_LSB () {
    /// Using Binary Search algorithm for guessing number: takes lesser no. of attempts- more efficient
    do {
-      Console.WriteLine ($"Is your number {bGuess}?(yes/high/low): ");
+      Console.WriteLine ($"Is {bGuess} higher than/lower than/equal to your number(yes/high/low)? ");
       string prompt = Console.ReadLine (); Console.WriteLine ();
       Check (prompt);
       if (prompt is "high") high = bGuess;
@@ -43,7 +43,7 @@ void GuessNumberBinaryMSB_LSB () {
 void GuessNumberRandom () {
    /// To produce random number from within range [low, high) and adjust range depending on user prompt.
    do {
-      Console.Write ($"Is your number {rGuess}?(yes/high/low): ");
+      Console.Write ($"Is {rGuess} higher than/lower than/equal to your number(yes/high/low)? ");
       string prompt = Console.ReadLine (); Console.WriteLine ();
       Check (prompt);
       if (prompt is "high") high = rGuess;
