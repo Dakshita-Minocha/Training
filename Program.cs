@@ -41,14 +41,14 @@ int GetMax () {
 }
 Mode GetMode () {
    // Returns Game Mode as entered by user. 
-   var input = Console.ReadKey (true).Key;
    for (; ; ) {
+      var input = Console.ReadKey (true).Key;
       switch (input) {
          case ConsoleKey.E: return Mode.Easy;
          case ConsoleKey.M: return Mode.Medium;
          case ConsoleKey.H: return Mode.Hard;
          case ConsoleKey.Q: Environment.Exit (0); break;
-         default: Console.WriteLine ("Incorrect Value given"); Environment.Exit (0); break;
+         default: Console.WriteLine ("Incorrect Value given"); break;
       }
    }
 
