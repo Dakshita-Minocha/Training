@@ -4,24 +4,19 @@
 // Convert each word to array and compare. 
 
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Diagnostics.Metrics;
-using System.Diagnostics.Tracing;
-using System.IO;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Security.Cryptography;
 
 int i = 0;
 var scoreCard = new List<(int, string)> ();
 string letters;
 // Finding all possible combinations of letters from dictionary:
-string[] words = File.ReadAllLines ("C:\\Users\\dakshitaminocha\\Downloads\\words.txt");
+string[] words = File.ReadAllLines ("C:/etc/words.txt");
 
 // Prompt to ask for the day's puzzle letters.
-Console.WriteLine ("Enter 7 letters:");
-letters = Console.ReadLine ().ToUpper ();
+for(; ;) {
+   Console.WriteLine ("\nEnter 7 letters:");
+   letters = Console.ReadLine ().ToUpper ();
+   if (letters.Count () == 7) break;
+}
 
 // Traversing through string to read characters.
 Console.WriteLine ("Your letters:");
@@ -30,11 +25,10 @@ Console.WriteLine ();
 
 // Choose method:
 for (; ; ) {
-   Console.WriteLine ("Display using Function1 [1] (uses existing methods), Function2 [2]. Press [Q] to exit.");
+   Console.WriteLine ("Display words with score[1]. Press [Q] to exit.");
    var key = Console.ReadKey (true).Key;
    switch (key) {
       case ConsoleKey.D1: FilterWords (); break;
-      case ConsoleKey.D2: scoreCard.Clear (); FilterWordsManually (); break;
       case ConsoleKey.Q: Environment.Exit (0); break;
       default: Console.WriteLine ("\nEnter [1] or [2]"); break;
    }
@@ -42,26 +36,28 @@ for (; ; ) {
 
 void Display (List<(int, string)> scoreCard) {
    var ordered = scoreCard.OrderByDescending (a => a.Item1).ThenBy (a => a.Item2);
-   foreach (var (j, val) in ordered) {
+   foreach (var (j, val) in ordered) 
       Console.Write ($"\n{j,2}. {val,-2}");
-   }
    int totalScore = scoreCard.Sum (a => a.Item1);
-   Console.WriteLine ("\n----\n" + totalScore + "  --total");
+   Console.WriteLine ("\n----\n" + totalScore + "  total");
 }
 
 // Filters through possible combinations with redefined functions like .Contain()
 // Adds possible words to a list of tuples in (score, word) format. 
 // Uses the ScoreCalculator() function to calculate score based on given rules.
 void FilterWords () {
-   foreach (var word in words) {
+   foreach (var word in words) 
       if (word.Length >= 4
       && word.Contains (letters[0].ToString ())
       && word.All (letters.Contains))
          scoreCard.Add ((ScoreCalculator (word), word));
-   }
    Display (scoreCard);
 }
+// Calculates score based on given rules.
+int ScoreCalculator (string word) => (word.Length == 4 ? 1 : word.Length) + (letters.All(word.Contains) ? 7 : 0);
 
+
+/*  
 // Calls defined local functions like CheckFirstChar() to filter through dictionary words.
 // Adds possible words to a list of tuples in (score, word) format. 
 // Uses the ScoreCalculator() function to calculate score based on given rules.
@@ -74,9 +70,6 @@ void FilterWordsManually () {
    }
    Display (scoreCard);
 }
-
-// Calculates score based on given rules.
-int ScoreCalculator (string word) => (word.Length == 4 ? 1 : word.Length) + (CheckPangram (word) ? 7 : 0);
 
 // Checks if the given word is a Pangram, i.e., uses all 7 letters.
 bool CheckPangram (string word) {
@@ -108,6 +101,6 @@ int CheckCharacters (string word) {
       if (count == 0) return count;
    }
    return count;
-}
+} */
 
 
