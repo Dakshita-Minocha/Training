@@ -34,12 +34,15 @@ for (; ; ) {
    }
 }
 
+
+// Output Display: 
 void Display (List<(int, string)> scoreCard) {
    var ordered = scoreCard.OrderByDescending (a => a.Item1).ThenBy (a => a.Item2);
    foreach (var (j, val) in ordered) 
       Console.Write ($"\n{j,2}. {val,-2}");
    int totalScore = scoreCard.Sum (a => a.Item1);
    Console.WriteLine ("\n----\n" + totalScore + "  total");
+   scoreCard.Clear ();
 }
 
 // Filters through possible combinations with redefined functions like .Contain()
@@ -53,6 +56,7 @@ void FilterWords () {
          scoreCard.Add ((ScoreCalculator (word), word));
    Display (scoreCard);
 }
+
 // Calculates score based on given rules.
 int ScoreCalculator (string word) => (word.Length == 4 ? 1 : word.Length) + (letters.All(word.Contains) ? 7 : 0);
 
