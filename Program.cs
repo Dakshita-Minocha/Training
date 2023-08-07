@@ -1,7 +1,15 @@
-﻿namespace Training {
+﻿using System.Linq.Expressions;
+
+namespace Training {
    internal class Program {
-      static void Main(string[] args) {
-         Console.WriteLine("Hello, World!");
+      static void Main (string[] args) {
+         for (; ; ) {
+            Console.Write ("Enter number or press [Q] to exit: ");
+            string input = Console.ReadLine ();
+            if (int.TryParse (input, out int number))
+               Console.WriteLine ($"Input: {number}\nHEX: {number:x} \nBinary: {Convert.ToString (number, 2).PadLeft (32, '0')}");
+            if (input.ToLower() == "q") Environment.Exit (0);
+         }
       }
    }
 }
