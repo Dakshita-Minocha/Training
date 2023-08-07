@@ -4,8 +4,6 @@
 // Convert each word to array and compare. 
 
 using System;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 
 int i = 0;
 var scoreCard = new List<(int, string)> ();
@@ -14,21 +12,21 @@ string letters;
 string[] words = File.ReadAllLines ("C:/etc/words.txt");
 
 // Prompt to ask for the day's puzzle letters, checking if first 7 letters are all alphabets and displaying them, then calling function FilterWords();
-for(; ;){ 
 for (; ; ) {
-bool flag=true;
-   Console.WriteLine ("Enter 7 letters:");
-   letters = Console.ReadLine ().ToUpper ();
-   letters = letters.Substring (0, 7);
-   foreach (var ch in letters) if (!char.IsLetter(ch)) flag=false;
-   if (flag) break;
-}
-Console.WriteLine ("Your letters:");
-for (i = 0; i < letters.Length; i++) Console.Write ($" {letters[i]} ");
-Console.WriteLine ();
-FilterWords ();
-Console.Write ("Do you want to continue(y/n)?\n");
-if (Console.ReadKey (true).Key == ConsoleKey.N) Environment.Exit (0);
+   for (; ; ) {
+      bool flag = true;
+      Console.WriteLine ("Enter letters:");
+      letters = Console.ReadLine ().ToUpper ();
+      letters = letters.Substring (0, 7);
+      foreach (var ch in letters) if (!char.IsLetter (ch)) flag = false;
+      if (flag) break;
+   }
+   Console.WriteLine ("Your letters:");
+   for (i = 0; i < letters.Length; i++) Console.Write ($" {letters[i]} ");
+   Console.WriteLine ();
+   FilterWords ();
+   Console.Write ("Do you want to continue(y/n)?\n");
+   if (Console.ReadKey (true).Key == ConsoleKey.N) Environment.Exit (0);
 }
 
 // Output Display: 
@@ -55,52 +53,3 @@ void FilterWords () {
 
 // Calculates score based on given rules.
 int ScoreCalculator (string word) => (word.Length == 4 ? 1 : word.Length) + (letters.All (word.Contains) ? 7 : 0);
-
-
-/*  
-// Calls defined local functions like CheckFirstChar() to filter through dictionary words.
-// Adds possible words to a list of tuples in (score, word) format. 
-// Uses the ScoreCalculator() function to calculate score based on given rules.
-void FilterWordsManually () {
-   foreach (var word in words) {
-      if (word.Length > 3
-      && CheckFirstChar (letters[0], word) == 1
-      && CheckCharacters (word) != 0)
-         scoreCard.Add ((ScoreCalculator (word), word));
-   }
-   Display (scoreCard);
-}
-
-// Checks if the given word is a Pangram, i.e., uses all 7 letters.
-bool CheckPangram (string word) {
-   int count = 0;
-   foreach (var letter in letters) 
-      foreach (var ch in word) 
-         if (letter == ch) {
-            count++; break;
-         }
-   if (count == 7) return true;
-   return false;
-}
-
-// Checks if the word contains the first (mandatory) character from the array.
-int CheckFirstChar (char letter, string word) {
-   foreach (var ch in word) if (ch == letter) return 1;
-   return 0;
-}
-
-// Checks if all letters in the word are from the givenn array.
-int CheckCharacters (string word) {
-   int count = 0;
-   foreach (var ch in word) {
-      foreach (var letter in letters) {
-         if (letter == ch) {
-            count = 1; break;
-         } else count = 0;
-      }
-      if (count == 0) return count;
-   }
-   return count;
-} */
-
-
