@@ -1,8 +1,7 @@
-﻿using ;
-namespace Training {
+﻿namespace Training {
    internal class Program {
       static void Main(string[] args) {
-         Console.WriteLine(Number);
+         Console.WriteLine("Hello, World!");
       }
    }
 }
