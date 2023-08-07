@@ -7,7 +7,7 @@ namespace Training {
             Console.Write ("Enter number or press [Q] to exit: ");
             string input = Console.ReadLine ();
             if (int.TryParse (input, out int number))
-               Console.WriteLine ($"Input: {number}\nHEX: {number:X} \nBinary: {Convert.ToString (number, 8)}");
+               Console.WriteLine ($"Input: {number}\nHEX: {number:X} \nBinary: {Convert.ToString (number, 2)}");
             if (input.ToLower() == "q") Environment.Exit (0);
          }
       }
