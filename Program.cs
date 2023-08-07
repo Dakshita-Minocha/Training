@@ -4,6 +4,8 @@
 // Convert each word to array and compare. 
 
 using System;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 int i = 0;
 var scoreCard = new List<(int, string)> ();
@@ -11,34 +13,28 @@ string letters;
 // Finding all possible combinations of letters from dictionary:
 string[] words = File.ReadAllLines ("C:/etc/words.txt");
 
-// Prompt to ask for the day's puzzle letters.
-for(; ;) {
-   Console.WriteLine ("\nEnter 7 letters:");
+// Prompt to ask for the day's puzzle letters, checking if first 7 letters are all alphabets and displaying them, then calling function FilterWords();
+for(; ;){ 
+for (; ; ) {
+bool flag=true;
+   Console.WriteLine ("Enter 7 letters:");
    letters = Console.ReadLine ().ToUpper ();
-   if (letters.Count () == 7) break;
+   letters = letters.Substring (0, 7);
+   foreach (var ch in letters) if (!char.IsLetter(ch)) flag=false;
+   if (flag) break;
 }
-
-// Traversing through string to read characters.
 Console.WriteLine ("Your letters:");
 for (i = 0; i < letters.Length; i++) Console.Write ($" {letters[i]} ");
 Console.WriteLine ();
-
-// Choose method:
-for (; ; ) {
-   Console.WriteLine ("Display words with score[1]. Press [Q] to exit.");
-   var key = Console.ReadKey (true).Key;
-   switch (key) {
-      case ConsoleKey.D1: FilterWords (); break;
-      case ConsoleKey.Q: Environment.Exit (0); break;
-      default: Console.WriteLine ("\nEnter [1] or [2]"); break;
-   }
+FilterWords ();
+Console.Write ("Do you want to continue(y/n)?\n");
+if (Console.ReadKey (true).Key == ConsoleKey.N) Environment.Exit (0);
 }
-
 
 // Output Display: 
 void Display (List<(int, string)> scoreCard) {
    var ordered = scoreCard.OrderByDescending (a => a.Item1).ThenBy (a => a.Item2);
-   foreach (var (j, val) in ordered) 
+   foreach (var (j, val) in ordered)
       Console.Write ($"\n{j,2}. {val,-2}");
    int totalScore = scoreCard.Sum (a => a.Item1);
    Console.WriteLine ("\n----\n" + totalScore + "  total");
@@ -49,7 +45,7 @@ void Display (List<(int, string)> scoreCard) {
 // Adds possible words to a list of tuples in (score, word) format. 
 // Uses the ScoreCalculator() function to calculate score based on given rules.
 void FilterWords () {
-   foreach (var word in words) 
+   foreach (var word in words)
       if (word.Length >= 4
       && word.Contains (letters[0].ToString ())
       && word.All (letters.Contains))
@@ -58,7 +54,7 @@ void FilterWords () {
 }
 
 // Calculates score based on given rules.
-int ScoreCalculator (string word) => (word.Length == 4 ? 1 : word.Length) + (letters.All(word.Contains) ? 7 : 0);
+int ScoreCalculator (string word) => (word.Length == 4 ? 1 : word.Length) + (letters.All (word.Contains) ? 7 : 0);
 
 
 /*  
