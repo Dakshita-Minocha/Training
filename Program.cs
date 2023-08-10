@@ -10,7 +10,7 @@ namespace Training {
          int.TryParse (Console.ReadLine (), out int num2);
          if (num1 > num2) (num1, num2) = (num2, num1);
          Console.Write ($"\nLCM: {LCM (num1, num2)}\n");
-         Console.Write ($"\nHCF: {HCF (num1, num2)}\n");
+         Console.Write ($"HCF: {HCF (num1, num2)}\n");
       }
       static int LCM (int num1, int num2) {
          for (int i = num2; i < num1 * num2; i++)
@@ -19,7 +19,7 @@ namespace Training {
          return num1 * num2;
       }
       static int HCF (int num1, int num2) {
-         for (int i = num1; i > 0; i++)
+         for (int i = num1; i > 0; i--)
             if (num1 % i == 0 && num2 % i == 0)
                return i;
          return 1;
