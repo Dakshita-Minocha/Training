@@ -16,7 +16,7 @@ namespace Training {
                DisplayChessItem (i, j);
             }
             Console.Write ('\u2502' + '\n');
-            //Console.WriteLine ();
+            Console.WriteLine ();
             if (c != 9) Console.Write ('\u251C');
          }
          PrintLine (9, 8);
