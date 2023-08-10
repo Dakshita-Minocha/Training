@@ -1,13 +1,11 @@
-﻿using System;
-using System.Globalization;
-using System.Text;
+﻿using System.Text;
 
 namespace Training {
    internal class Program {
       /// <summary>Program to display Chess Board using Unicode</summary>
       /// <param name="args"></param>
       static void Main (string[] args) {
-         System.Console.OutputEncoding = new UnicodeEncoding ();
+         System.Console.OutputEncoding = new UnicodeEncoding();
          int c = 1;
          for (int i = 1; i <= 8; i++) {
             PrintLine (i, c); Console.WriteLine (); c++;
@@ -15,7 +13,7 @@ namespace Training {
                if (j != 9) Console.Write ('\u2502');
                DisplayChessItem (i, j);
             }
-            Console.Write ('\u2502' + '\n');
+            Console.Write ('\u2502');
             Console.WriteLine ();
             if (c != 9) Console.Write ('\u251C');
          }
@@ -67,6 +65,3 @@ namespace Training {
       }
    }
 }
-
-
-
