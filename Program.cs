@@ -5,13 +5,14 @@ namespace Training {
       /// <summary>Program to display Chess Board using Unicode</summary>
       /// <param name="args"></param>
       static void Main (string[] args) {
-         System.Console.OutputEncoding = new UnicodeEncoding ();
+         System.Console.OutputEncoding = new UnicodeEncoding();
          for (int i = 1; i <= 8; i++) {
             PrintLine (i);
             Console.WriteLine ();
             for (int j = 1; j <= 8; j++) {
                if (j != 9) Console.Write ('\u2502');
                DisplayChessItem (i, j);
+               Console.Write (" ");
             }
             Console.Write ('\u2502' + "\n");
             if (i != 8) Console.Write ('\u251C');
@@ -24,13 +25,13 @@ namespace Training {
          for (int i = 1; i <= 8; i++) {
             switch (row) {
                case 1:
-                  Console.Write ('\u2500'); Console.Write ('\u2500');
+                  Console.Write ('\u2500'); Console.Write ('\u2500'); Console.Write ('\u2500');
                   Console.Write (i == 8 ? '\u2510' : '\u252C'); break;
                case 9:
-                  Console.Write ('\u2500'); Console.Write ('\u2500');
+                  Console.Write ('\u2500'); Console.Write ('\u2500'); Console.Write ('\u2500');
                   Console.Write (i == 8 ? '\u2518' : '\u2534'); break;
                default:
-                  Console.Write ('\u2500'); Console.Write ('\u2500');
+                  Console.Write ('\u2500'); Console.Write ('\u2500'); Console.Write ('\u2500');
                   Console.Write (i == 8 ? '\u2524' : '\u253C'); break;
             }
          }
