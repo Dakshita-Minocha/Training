@@ -1,6 +1,6 @@
 ﻿// Program to generate dictionary words with length>4 with letters from an array.
 // Each word must contain the first letter from the array, and only the letters from the array, in any order or number.
-// We will read from the dictionary file and filter words with length>4
+// We will readfrom the dictionary file and filter words with length>4
 // Convert each word to array and compare. 
 
 using System;
@@ -17,7 +17,7 @@ for (; ; ) {
       bool flag = true;
       Console.WriteLine ("Enter letters:");
       letters = Console.ReadLine ().ToUpper ();
-      letters = letters[0..7];
+      letters = letters.Substring (0, 7);
       foreach (var ch in letters) if (!char.IsLetter (ch)) flag = false;
       if (flag) break;
    }
@@ -30,11 +30,11 @@ for (; ; ) {
 }
 
 // Output Display: 
-void Display (List<(int score, string word)> scoreCard) {
-   var ordered = scoreCard.OrderByDescending (a => a.score).ThenBy (a => a.word);
+void Display (List<(int, string)> scoreCard) {
+   var ordered = scoreCard.OrderByDescending (a => a.Item1).ThenBy (a => a.Item2);
    foreach (var (j, val) in ordered)
       Console.Write ($"\n{j,2}. {val,-2}");
-   int totalScore = scoreCard.Sum (a => a.score);
+   int totalScore = scoreCard.Sum (a => a.Item1);
    Console.WriteLine ("\n----\n" + totalScore + "  total");
    scoreCard.Clear ();
 }
@@ -45,7 +45,7 @@ void Display (List<(int score, string word)> scoreCard) {
 void FilterWords () {
    foreach (var word in words)
       if (word.Length >= 4
-      && word.Contains (letters[0])
+      && word.Contains (letters[0].ToString ())
       && word.All (letters.Contains))
          scoreCard.Add ((ScoreCalculator (word), word));
    Display (scoreCard);
