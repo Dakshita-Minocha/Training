@@ -16,7 +16,6 @@ namespace Training {
          }
          PrintLine (9);
       }
-<<<<<<< Updated upstream
 
       /// <summary>Prints 8x8 Grid line by line between character lines</summary>
       static void PrintLine (int row) {
@@ -53,18 +52,6 @@ namespace Training {
                return j == 4 ? '\u265B' : '\u265A';
          }
          return ' ';
-||||||| Stash base
-      static bool IsPrime(int input){
-      for (int i =2; i < input; i++)
-            if (input !=2 && input % i == 0) return false;
-      return true;
-=======
-      static bool IsPrime(int input){
-         for (int i = 2; i < input; i++)
-            return input == 2 || input % i != 0;
-            //return false;
-      //return true;
->>>>>>> Stashed changes
       }
    }
 }
