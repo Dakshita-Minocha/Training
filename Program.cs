@@ -38,18 +38,18 @@ namespace Training {
       /// <param name="j">column</param>
       static char ChessItem (int i, int j) {
          switch (i) {
-            case 1:  // white pieces
-               if (j is 1 or 8) return '\u2656';
-               else if (j is 3 or 6) return '\u2657';
-               else if (j is 2 or 7) return '\u2658';
-               return j == 4 ? '\u2655' : '\u2654';
-            case 2: return '\u2659'; // white pawns
-            case 7: return '\u265F'; // black pawns
-            case 8: // black pieces
-               if (j is 1 or 8) return '\u265C';
-               else if (j is 3 or 6) return '\u265D';
-               else if (j is 2 or 7) return '\u265E';
-               return j == 4 ? '\u265B' : '\u265A';
+            case 1:
+               if (j is 1 or 8) return '♖';
+               else if (j is 3 or 6) return '♗';
+               else if (j is 2 or 7) return '♘';
+               return j == 4 ? '♕' : '♔';
+            case 2: return '♙';
+            case 7: return '♟';
+            case 8: 
+               if (j is 1 or 8) return '♜';
+               else if (j is 3 or 6) return '♝';
+               else if (j is 2 or 7) return '♞';
+               return j == 4 ? '♛' : '♚';
          }
          return ' ';
       }
