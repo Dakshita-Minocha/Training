@@ -7,7 +7,7 @@
             string input = Console.ReadLine();
             if (input.ToLower() == "q") Environment.Exit(0);
             int.TryParse (input, out int num);
-            Console.WriteLine (IsPrime(num) ? $"{num} is prime" : $"{num} is NOT prime");
+            Console.WriteLine ($"{num} is " + (IsPrime(num) ? "" : "NOT ") + "prime");
          }
       }
       static bool IsPrime(int input){
