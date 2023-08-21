@@ -12,7 +12,7 @@
                List<int> row1 = new (); List<int> row2 = new ();
                for (int i = 0; i < rows; i++) {
                   for (int j = 0; j < rows; j++)
-                     if (i < j) Console.Write (" ");
+                     if (i < j) Console.Write ("  ");
                   switch (i) {
                      case 0: break;
                      case 1: row1.Add (1); break;
@@ -27,7 +27,7 @@
                   }
                   row1.Add (1); row2.Clear ();
                   foreach (var n in row1) row2.Add (n);
-                  foreach (var num in row1) Console.Write (num + " ");
+                  foreach (var num in row1) Console.Write ($"{num,5} ");
                   Console.WriteLine ();
                   row1.Clear ();
                }
