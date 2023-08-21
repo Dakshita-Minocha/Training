@@ -3,29 +3,24 @@
 namespace Training {
    internal class Program {
       /// <summary>Program to print a diamond</summary>
-      /// <param name="args"></param>
       static void Main (string[] args) {
-         Console.Write ("Enter rows (half the height): ");
-         int.TryParse (Console.ReadLine (), out int rows);
-         int i, j, count = 1;
-         for (i = 0; i < rows; i++) {
-            for (j = rows; j > 0; j--)
-               if (i < j) Console.Write (" ");
-            for (j = count; j > 0; j--)
-               Console.Write ("*");
-            count += 2;
-            Console.WriteLine ();
+         for (; ; )
+            {
+            Console.Write ("Enter rows (half the height), press [q] to exit: ");
+            string row = Console.ReadLine ();
+            if (row.ToLower () == "q") Environment.Exit (0);
+            int.TryParse (row, out int rows);
+            // Printing upper half of diamond: j ' ' followed by scount '*'.
+            int i, j, scount = 1;
+            for (i = 0; i <= rows; i++, scount += 2) {
+               for (j = 0; j <= rows; j++)
+                  Console.Write (i < j ? " " : "");
+               Console.Write (new string ('*', scount) + '\n');
+            }
+            // Printing lower half of diamond: i ' ' followed by scount '*'.
+            for (i = 1, scount = rows * 2 - 1; i <= rows; i++, scount -= 2)
+               Console.Write (new string (' ', i) + new string ('*', scount) + '\n');
          }
-         count = 1;
-         for (i = 1; i <= rows; i++) {
-            for (j = 1; j <= count + 1; j++)
-               Console.Write (" ");
-            count++;
-            for (j = 1; j < 2 * (rows - i); j++)
-               Console.Write ("*");
-            Console.WriteLine ();
-         }
-         Console.WriteLine ();
       }
    }
 }
