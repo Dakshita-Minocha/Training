@@ -12,7 +12,7 @@
             if (num <= 0)
                Console.WriteLine ("\nError: Digital root is only defined for natural numbers. Try again.\n");
             else {
-               while (i > 1) {
+               while (num > 9) {
                   sum = 0;
                   while (i >= 1) {
                      sum += num % 10;
