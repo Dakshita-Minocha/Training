@@ -10,24 +10,26 @@ namespace Training {
          System.Console.OutputEncoding = new UnicodeEncoding ();
          for (int i = 1; i <= 8; i++) {
             PrintLine (i);
-            for (int j = 1; j <= 8; j++) 
-                  Console.Write ('\u2502' + $" {ChessItem (i, j)} ");
-            Console.Write ('\u2502' + "\n");
+            for (int j = 1; j <= 8; j++) {
+               if (i == 7) Console.Write ('│' + $" {ChessItem (i, j)}");  //The font I'm using displays extra space after black pawn.
+               else Console.Write ('│' + $" {ChessItem (i, j)} ");
+            }
+            Console.Write ('│' + "\n");
          }
          PrintLine (9);
       }
 
       /// <summary>Prints 8x8 Grid line by line between character lines</summary>
       static void PrintLine (int row) {
-         if (row == 1) Console.Write ('\u250C');
-         else if (row == 9) Console.Write ('\u2514');
-         else Console.Write ('\u251C');
+         if (row == 1) Console.Write ('┌');
+         else if (row == 9) Console.Write ('└');
+         else Console.Write ('├');
          for (int i = 1; i <= 8; i++) {
-            Console.Write(new string ('\u2500', 3));
+            Console.Write (new string ('─', 3));
             switch (row) {
-               case 1: Console.Write (i == 8 ? '\u2510' : '\u252C'); break;
-               case 9: Console.Write (i == 8 ? '\u2518' : '\u2534'); break;
-               default: Console.Write (i == 8 ? '\u2524' : '\u253C'); break;
+               case 1: Console.Write (i == 8 ? '┐' : '┬'); break;
+               case 9: Console.Write (i == 8 ? '┘' : '┴'); break;
+               default: Console.Write (i == 8 ? '┤' : '┼'); break;
             }
          }
          Console.WriteLine ();
@@ -37,19 +39,13 @@ namespace Training {
       /// <param name="i">row</param>
       /// <param name="j">column</param>
       static char ChessItem (int i, int j) {
+         var whitepieces = new char[8] { '♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖' };
+         var blackpieces = new char[8] { '♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜' };
          switch (i) {
-            case 1:
-               if (j is 1 or 8) return '♖';
-               else if (j is 3 or 6) return '♗';
-               else if (j is 2 or 7) return '♘';
-               return j == 4 ? '♕' : '♔';
+            case 1: return whitepieces[--j];
             case 2: return '♙';
             case 7: return '♟';
-            case 8: 
-               if (j is 1 or 8) return '♜';
-               else if (j is 3 or 6) return '♝';
-               else if (j is 2 or 7) return '♞';
-               return j == 4 ? '♛' : '♚';
+            case 8: return blackpieces[--j];
          }
          return ' ';
       }
