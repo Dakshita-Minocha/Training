@@ -1,42 +1,38 @@
-﻿using System.Runtime;
-
 namespace Training {
    internal class Program {
       /// <summary>Program to generate LCM and HCF of any n numbers</summary>
-      /// <param name="args"></param>
-      static void Main (string[] args) {
-         Console.WriteLine ("Enter no of parameters: ");
+      static void Main () {
+         Console.WriteLine ("How many numbers would you like to enter? ");
          int.TryParse (Console.ReadLine (), out int count);
          Console.WriteLine ($"Enter {count} numbers: ");
-         int num1;
-         var num = new List <int>();
-         for (int i = 0;i < count; i++) {
-            int.TryParse (Console.ReadLine (), out num1);
-            num.Add (Math.Abs(num1));
-            }
+         var num = new List<int> ();
+         for (int i = 0; i < count; i++) {
+            int.TryParse (Console.ReadLine (), out int num1);
+            num.Add (Math.Abs (num1));
+         }
          num.Sort ();
-         Console.Write ($"\nLCM: { Calc(num).Item1}\n");
-         Console.Write ($"HCF: {Calc (num).Item2}\n");
+         Console.Write ($"\nLCM: {Calc (num).lcm}\n");
+         Console.Write ($"HCF: {Calc (num).hcf}\n");
       }
-      static (int, int) Calc(List<int> num){
-         int lcm = num[0], hcf =num[num.Count()-1];
-         for (int i=1; i<num.Count(); i++) {
-           lcm = LCM(num[i], lcm);
-           hcf = HCF(num[i], hcf);
+      /// <summary> Passes n numbers to LCM () and HCF () functions and returns lcm and hcf values. 
+      ///           Sets lcm = hcf = 0 if any of entered values = 0. </summary>
+      /// <param name="num">list of 'n' numbers</param>
+      /// <returns>(lcm, hcf)</returns>
+      static (int lcm, int hcf) Calc (List<int> num) {
+         int lcm = num[0], hcf = num[0];
+         for (int i = 1; i < num.Count; i++) {
+            if (num[i - 1] == 0) return (0, 0);
+            lcm = LCM (lcm, num[i]);
+            hcf = HCF (num[i], hcf);
          }
          return (lcm, hcf);
       }
+      static int HCF (int num1, int num2) => (num1 * num2) / LCM (num1, num2);
       static int LCM (int num1, int num2) {
          for (int i = num2; i < num1 * num2; i++)
             if (i % num1 == 0 && i % num2 == 0)
                return i;
          return num1 * num2;
-      }
-      static int HCF (int num1, int num2) {
-         for (int i = num1; i > 0; i--)
-            if (num1 % i == 0 && num2 % i == 0)
-               return i;
-         return 1;
       }
    }
 }
