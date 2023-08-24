@@ -12,17 +12,9 @@ namespace Training {
             input = Math.Abs (input);
             nWord = "Minus ";
          } else if (input == 0) nWord = "Zero";
-
-         Console.WriteLine ("Words[1], roman numerals[2]:");
-         switch (Console.ReadKey (true).Key) {
-            case ConsoleKey.D1:
-               (numbers, place) = Digits (input);
-               foreach (int digit in numbers) nWord += Words (digit, --place);
-               foreach (var word in nWord) Console.Write (word); break;
-            case ConsoleKey.D2:
-               Console.WriteLine (nWord + Roman (input)); break;
-            default: Console.WriteLine ("Enter [1] or [2]"); break;
-         }
+         (numbers, place) = Digits (input);
+         foreach (int digit in numbers) nWord += Words (digit, --place);
+         Console.WriteLine ("Words: " + nWord + "\nRoman numerals: " + Roman (input));
       }
       /// <summary>Returns digits of a number in stack</summary>
       /// <param name="input"></param>
@@ -35,7 +27,7 @@ namespace Training {
             input /= 10;
             numbers.Push (digit);
             place++;
-         }  
+         }
          return (numbers, place);
       }
 
@@ -49,7 +41,7 @@ namespace Training {
          string[] tens = { "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
          switch (place) {
             case 0: return digitValues[digit];
-            case 1: return (digit == 1) ? "ten " : ("and " + tens[digit] + " ");
+            case 1: return (digit == 1) ? "ten " : (tens[digit] + " ");
             default: return digitValues[digit] + " " + placeValues[place] + " ";
          }
       }
