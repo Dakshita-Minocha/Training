@@ -2,11 +2,15 @@
    internal class Program {
       /// <summary> Program to find digital root of a number. 
       /// Digital root = sum of digits calculated iteratively till there's a single digit left.</summary>
-      static void Main (string[] args) {
+      static void Main () {
+         string input;
          for (; ; ) {
-            Console.Write ("Enter number or press [Q] to exit: ");
-            string input = Console.ReadLine ();
-            if (input.ToLower () == "q") Environment.Exit (0);
+            for (; ; ) {
+               Console.Write ("Enter number or press [Q] to exit: ");
+               input = Console.ReadLine ();
+               if (input.ToLower () == "q") Environment.Exit (0);
+               if (input.All (c => Char.IsDigit (c) | c == '-')) break;
+            }
             int.TryParse (input, out int num);
             int i = input.Length, sum;
             if (num <= 0)
