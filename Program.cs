@@ -2,10 +2,14 @@
    internal class Program {
       /// <summary> Program to display Pascal's triangle</summary>
       static void Main (string[] args) {
+         string input;
          for (; ; ) {
-            Console.Write ("Enter number of rows or press [Q] to exit: ");
-            string input = Console.ReadLine ();
-            if (input.ToLower () == "q") Environment.Exit (0);
+            for (; ; ) {
+               Console.Write ("Enter number of rows or press [Q] to exit: ");
+               input = Console.ReadLine ();
+               if (input.ToLower () == "q") Environment.Exit (0);
+               if (input.All (c => Char.IsDigit (c))) break;
+            }
             int.TryParse (input, out int rows);
             if (rows <= 0) Console.WriteLine ("Please enter a positve number.");
             else {
