@@ -6,12 +6,14 @@
             Console.WriteLine ("Enter String or press [Q] to exit: ");
             string input = Console.ReadLine ().ToLower ();
             if (input == "q") Environment.Exit (0);
-            int i = 0;
-            while (i < input.Length - 1) {
-               if (input[i] == input[i + 1]) input = input.Remove (i, 2);
-               else i++;
+            if (input.All (c => Char.IsLetter (c))) {
+               int i = 0;
+               while (i < input.Length - 1) {
+                  if (input[i] == input[i + 1]) input = input.Remove (i, 2);
+                  else i++;
+               }
+               Console.WriteLine ($"Reduced string: {input}");
             }
-            Console.WriteLine ($"Reduced string: {input}");
          }
       }
    }
