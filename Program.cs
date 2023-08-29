@@ -10,7 +10,7 @@
                Console.Write ("Enter word, or enter [Q] to exit: ");
                input = Console.ReadLine ().ToLower ();
                if (input == "q") Environment.Exit (0);
-               if (input.Length > 1 && input.All (c => Char.IsAsciiLetter (c))) break;
+               if (input.Length > 1 && input.All (c => Char.IsLetter (c))) break;
             }
             perm.Clear ();
             perm = Permutations (input.ToList (), perm, k, l);
