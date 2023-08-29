@@ -12,7 +12,7 @@
             }
             int.TryParse (input, out int num);
             if (num == 0) Console.WriteLine ("0 is NOT prime");
-            else Console.WriteLine ($"{num} is " + (IsPrime (num) ? "" : "NOT ") + "prime");
+            else Console.WriteLine ($"\"{num}\" is " + (IsPrime (num) ? "" : "NOT ") + "prime\n");
          }
       }
       static bool IsPrime (int input) {
