@@ -6,16 +6,18 @@
             Console.Write ("Enter word or press [Q] to exit: ");
             string input = Console.ReadLine (), str;
             if (input.ToLower () == "q") Environment.Exit (0);
-            bool flag = true;
-            int i = 0, len = input.Length;
-            while (i < len) {
-               str = input[(i + 1)..len];
-               if (str.Any (c => c == input[i])) {
-                  flag = false; break;
+            if (input.All (c => Char.IsLetter (c))) {
+               bool flag = true;
+               int i = 0, len = input.Length;
+               while (i < len) {
+                  str = input[(i + 1)..len];
+                  if (str.Any (c => c == input[i])) {
+                     flag = false; break;
+                  }
+                  i++;
                }
-               i++;
+               Console.WriteLine ($"{input} is " + (flag ? "" : "NOT ") + "an Isogram.");
             }
-            Console.WriteLine ($"{input} is " + (flag ? "" : "NOT ") + "an Isogram.");
          }
       }
    }
