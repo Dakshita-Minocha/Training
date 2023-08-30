@@ -6,7 +6,7 @@ namespace Training {
       /// The program first prints the grid line (using Printline()), then the line with chess characters as: "| <char> ".
       /// At the end of the character line it adds another " | " to close grid and print the next grid line.
       /// It prints the last grid line separately as PrintLine(9) to close grid.</summary>
-      static void Main (string[] args) {
+      static void Main () {
          System.Console.OutputEncoding = new UnicodeEncoding ();
          for (int i = 1; i <= 8; i++) {
             PrintLine (i);
@@ -41,13 +41,13 @@ namespace Training {
       static char ChessItem (int i, int j) {
          var whitepieces = new char[8] { '♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖' };
          var blackpieces = new char[8] { '♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜' };
-         switch (i) {
-            case 1: return whitepieces[--j];
-            case 2: return '♙';
-            case 7: return '♟';
-            case 8: return blackpieces[--j];
-         }
-         return ' ';
+         return i switch {
+            1 => whitepieces[--j],
+            2 => '♙',
+            7 => '♟',
+            8 => blackpieces[--j],
+            _ => ' '
+         };
       }
    }
 }
