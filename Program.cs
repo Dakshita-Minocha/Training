@@ -9,11 +9,11 @@
                Console.Write ("Enter number or press [Q] to exit: ");
                input = Console.ReadLine ();
                if (input.ToLower () == "q") Environment.Exit (0);
-               if (input.All (c => Char.IsDigit (c) | c == '-')) break;
+               if (input.All (c => Char.IsDigit (c))) break;
             }
             int.TryParse (input, out int num);
             int i = input.Length, sum;
-            if (num <= 0)
+            if (num == 0)
                Console.WriteLine ("\nError: Digital root is only defined for natural numbers. Try again.\n");
             else {
                while (num > 9) {
