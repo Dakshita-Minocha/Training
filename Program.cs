@@ -1,7 +1,7 @@
 ﻿namespace Training {
    internal class Program {
       /// <summary> Program to display Pascal's triangle</summary>
-      static void Main (string[] args) {
+      static void Main () {
          string input;
          for (; ; ) {
             for (; ; ) {
@@ -17,17 +17,13 @@
                for (int i = 0; i < rows; i++) {
                   for (int j = 0; j < rows; j++)
                      if (i < j) Console.Write ("   ");
-                  switch (i) {
-                     case 0: break;
-                     case 1: row1.Add (1); break;
-                     default:
-                        row1.Add (1);
-                        int j = 0;
-                        while (j < i - 1) {
-                           row1.Add (row2[j] + row2[j + 1]);
-                           j++;
-                        }
-                        break;
+                  if (i >= 1) {
+                     row1.Add (1);
+                     int j = 0;
+                     while (j < i - 1) {
+                        row1.Add (row2[j] + row2[j + 1]);
+                        j++;
+                     }
                   }
                   row1.Add (1); row2.Clear ();
                   foreach (var n in row1) row2.Add (n);
