@@ -13,7 +13,7 @@
                if (input.Length > 1 && input.All (c => Char.IsLetter (c))) break;
             }
             perm.Clear ();
-            perm = Permutations (input.ToList (), perm, k, l);
+            perm = Permutations (input.ToCharArray (), perm, k, l);
             Console.WriteLine ($"Distinct permutations of the letters in {input.ToUpper ()}:\n");
             foreach (var str in perm)
                Console.WriteLine ($"{str}");
@@ -28,14 +28,15 @@
       /// <param name="k"> Index for swapping </param>
       /// <param name="l"> Index for swapping </param>
       /// <returns> List of all distinct permutations </returns>
-      static List<string> Permutations (List<char> input, List<string> perm, int k, int l) {
-         int len = input.Count;
+      static List<string> Permutations (char[] input, List<string> perm, int k, int l) {
+         int len = input.Length;
+         int numperm = NumofPermutations (len);
          string str = string.Join ("", input);
          perm.Add (str);
          (input[l], input[k]) = (input[k++], input[l++]);
          if (l == len) l = 0;
          if (k == len) k = 0;
-         if (perm.Count < NumofPermutations (len)) Permutations (input, perm, k, l);
+         if (perm.Count < numperm) Permutations (input, perm, k, l);
          return perm.Distinct ().ToList ();
       }
 
