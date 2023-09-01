@@ -3,18 +3,17 @@
       /// <summary> Longest abecedarian word in an array </summary>
       static void Main () {
          string[] words = new[] { "Abstemious", "sup", "Bijoux", "never", "ArENnic", "Chintz", "Facetious", "AeGIlops" };
-         var wcopy = words.ToArray ();
-         int i;
          Dictionary<string, int> isograms = new ();
-         foreach (var word in wcopy.Select (w => w.ToLower ())) {
+         for (int w = 0; w < words.Length; w++) {
+            string word = words[w].ToLower ();
             bool flag = true;
-            for (i = 0; i < word.Length - 1; i++)
+            for (int i = 0; i < word.Length - 1; i++)
                if (word[i] > word[i + 1]) {
                   flag = false; break;
                }
             if (flag) {
-               isograms.TryGetValue (new string (words[i]), out int len);
-               isograms[words[i]] = words[i].Length;
+               isograms.TryGetValue (new string (words[w]), out int len);
+               isograms[words[w]] = words[w].Length;
             }
          }
          var kvp = isograms.OrderByDescending (a => a.Value).FirstOrDefault ();
