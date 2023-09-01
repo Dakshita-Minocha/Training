@@ -5,11 +5,11 @@ namespace Training {
          string[] words = File.ReadAllLines ("C:/etc/words.txt");
          var list = new List<string> ();
          var letterFrequency = new Dictionary<char, int> ();
-         foreach (var word in words) {
-            foreach (var letter in word.Where (letter => Char.ToUpper (letter) is >= 'A' and <= 'Z')) {
-               letterFrequency.TryGetValue (letter, out int freq);
-               letterFrequency[letter] = freq + 1;
-            }
+         var split = words.SelectMany (word => word.ToCharArray ())
+                          .Where (letter => Char.ToUpper (letter) is >= 'A' and <= 'Z').ToList ();
+         foreach (char letter in split) {
+            letterFrequency.TryGetValue (letter, out int freq);
+            letterFrequency[letter] = freq + 1;
          }
          var ordered = letterFrequency.OrderByDescending (a => a.Value);
          Console.Write ("Frequency Table:\n\nLetter  Freq\n------  ----\n");
