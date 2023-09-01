@@ -38,11 +38,11 @@
          string[] placeValues = { "", "tens", "hundred", "thousand", "ten-thousand" };
          string[] digitValues = { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
          string[] tens = { "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
+         if (digit == 0) return "";
          return place switch {
             0 => digitValues[digit],
             1 => (flag ? "and " : "") + ((digit == 1) ? "ten " : (tens[digit] + " ")),
-            2 => digitValues[digit] + " " + placeValues[place] + " ",
-            _ => ""
+            _ => digitValues[digit] + " " + placeValues[place] + " "
          };
       }
 
