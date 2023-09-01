@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Training {
+﻿namespace Training {
    internal class Program {
-      static void Main (string[] args) {
+      static void Main () {
          string nWord = "";
          int place;
          Stack<int> numbers;
@@ -13,7 +11,8 @@ namespace Training {
             nWord = "Minus ";
          } else if (input == 0) nWord = "Zero";
          (numbers, place) = Digits (input);
-         foreach (int digit in numbers) nWord += Words (digit, --place);
+         bool flag = place > 2;
+         foreach (int digit in numbers) nWord += Words (digit, --place, flag);
          Console.WriteLine ("Words: " + nWord + "\nRoman numerals: " + Roman (input));
       }
       /// <summary>Returns digits of a number in stack</summary>
@@ -35,15 +34,16 @@ namespace Training {
       /// <param name="digit"></param>
       /// <param name="place">Place value of digit</param>
       /// <returns>Place value of digit passed in words</returns>
-      static string Words (int digit, int place) {
+      static string Words (int digit, int place, bool flag) {
          string[] placeValues = { "", "tens", "hundred", "thousand", "ten-thousand" };
          string[] digitValues = { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
          string[] tens = { "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety" };
-         switch (place) {
-            case 0: return digitValues[digit];
-            case 1: return (digit == 1) ? "ten " : (tens[digit] + " ");
-            default: return digitValues[digit] + " " + placeValues[place] + " ";
-         }
+         return place switch {
+            0 => digitValues[digit],
+            1 => (flag ? "and " : "") + ((digit == 1) ? "ten " : (tens[digit] + " ")),
+            2 => digitValues[digit] + " " + placeValues[place] + " ",
+            _ => ""
+         };
       }
 
       /// <summary>Returns roman numeral for number.</summary>
