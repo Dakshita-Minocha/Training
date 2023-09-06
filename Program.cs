@@ -11,10 +11,9 @@
             if (double.TryParse (input, out double _)) {
                var strArray = input.Split (".");
                Console.WriteLine ($"Digits of {input}: ");
-               input.Remove (0, 1);
                for (int i = 0; i < strArray.Length; i++)
-                  Console.WriteLine ((i == 0 ? "Integer part: " : "Decimal Part: ") + 
-                                     string.Join (" ", strArray[i].ToCharArray()));
+                  Console.WriteLine ((i == 0 ? "Integer part: " : "Decimal Part: ") +
+                                     string.Join (" ", strArray[i].ToCharArray ()));
             }
          }
       }
