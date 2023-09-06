@@ -1,32 +1,32 @@
 ﻿namespace Training {
    internal class Program {
       /// <summary> Program to swap indices </summary>
-      static void Main () {
-         int[] arr = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-         Console.Write ("Index: Element\n-------------\n");
-         foreach (int a in arr) Console.Write ($"  {Array.IndexOf (arr, a),3}: {a,3} \n");
+      static void Main () => SwapIndices ();
+
+      static void SwapIndices () {
+         List<int> arr = new () { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+         Console.Write ($"Elements: {string.Join (" ", arr)}\n" +
+                        $"Indices:  {string.Join (" ", arr.Select (a => arr.IndexOf (a)))} ");
          for (; ; ) {
-            Console.WriteLine ("\nEnter indices (from within range) to swap, or [Q] to exit: ");
-            string input = Console.ReadLine ();
-            if (input.ToLower () == "q") Environment.Exit (0);
-            else if (input.All (char.IsDigit) & input != "") {
-               int.TryParse (input, out int i1);
-               if (i1 >= 0 & i1 < arr.Length) {
-                  int.TryParse (Console.ReadLine (), out int i2);
-                  if (i2 >= 0 & i2 < arr.Length) {
-                     Swap (arr, i1, i2);
-                     Console.Write ("Swapped indices: \n");
-                     foreach (int i in arr) {
-                        if (i == arr[i1] | i == arr[i2]) Console.ForegroundColor = ConsoleColor.Green;
-                        Console.Write ($"  {Array.IndexOf (arr, i),3}: {i,3} \n");
-                        Console.ResetColor ();
-                     }
+            Console.WriteLine ("\nEnter 2 indices (from within range) to swap, or [Q] to exit: ");
+            string[] input = Console.ReadLine ().Split ();
+            if (input.Any (c => c.ToLower () == "q")) Environment.Exit (0);
+            if (input.Length == 2 && int.TryParse (input[0], out int i1) && int.TryParse (input[1], out int i2))
+               if (i1 >= 0 && i1 < arr.Count && i2 >= 0 && i2 < arr.Count) { // both inputs are numbers within range
+                  Swap (i1, i2);
+                  Console.Write ($"Elements: {string.Join (" ", arr)}\nIndices:  ");
+                  foreach (var a in string.Join ("", arr.Select (a => arr.IndexOf (a)))) {
+                     if (input.Any (x => x == a.ToString ())) PrintGreen (a);
+                     else Console.Write ($"{a} ");
                   }
                }
-               Console.WriteLine ();
-            }
+         }
+         void Swap (int i1, int i2) => (arr[i1], arr[i2]) = (arr[i2], arr[i1]);
+         void PrintGreen (char a) {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write ($"{a} ");
+            Console.ResetColor ();
          }
       }
-      static void Swap (int[] arr, int i1, int i2) => (arr[i1], arr[i2]) = (arr[i2], arr[i1]);
    }
 }
