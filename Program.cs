@@ -2,7 +2,7 @@
    internal class Program {
       /// <summary> Longest abecedarian word in an array </summary>
       static void Main () {
-         string[] words = new[] { "Abstemious", "sup", "Bijoux", "never", "ArENnic", "Chintz", "Facetious", "AeGIlops" };
+         string[] words = new[] { "Abstemious", "sup", "Bijoux", "never", "ArsENnic", "Chintz", "Facetious", "AeGIlops" };
          Dictionary<string, int> isograms = new ();
          for (int w = 0; w < words.Length; w++) {
             string word = words[w].ToLower ();
@@ -12,8 +12,9 @@
                   flag = false; break;
                }
             if (flag) {
-               isograms.TryGetValue (new string (words[w]), out int len);
-               isograms[words[w]] = words[w].Length;
+               word = words[w];
+               isograms.TryGetValue (word, out _);
+               isograms[word] = word.Length;
             }
          }
          var kvp = isograms.OrderByDescending (a => a.Value).FirstOrDefault ();
