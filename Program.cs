@@ -7,7 +7,7 @@
             string input = Console.ReadLine ();
             if (input.ToLower () == "q") Environment.Exit (0);
             string[] num = input.Split ();
-            if (num.Length < 3) {
+            if (num.Length == 2) {
                if (int.TryParse (num[0], out int num1) && int.TryParse (num[1], out int num2)) {
                   Console.WriteLine ($"Numbers:\na = {num1}\nb = {num2}");
                   (num1, num2) = Swap (num1, num2);
