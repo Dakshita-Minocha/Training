@@ -48,10 +48,10 @@ namespace Training {
       public MyList () => array = new T[_capacity];
 
       /// <summary> Number of non-null elements in list </summary>
-      public int Count { get => _count; }
+      public int Count => _count;
 
       /// <summary> Current max capacity of list </summary>
-      public int Capacity { get => _capacity; }
+      public int Capacity => _capacity;
 
       /// <summary> Allows user to acces elements by specifying index within index specifiers: list[index] </summary>
       /// <param name="index"> Specified Index </param>
@@ -82,8 +82,7 @@ namespace Training {
       public void Add (T value) {
          try {
             array[_count] = value;
-            // Incrementing separately as it skips next element in case of resizing
-            _count++;
+            _count++;                     // Incrementing separately as it skips next element in case of resizing
          } catch (IndexOutOfRangeException) {
             Resize (2);
             array[_count++] = value;
@@ -145,7 +144,7 @@ namespace Training {
       }
 
       /// <summary> Resizes Array to double current capacity </summary>
-      internal void Resize (double multiplier) {
+      void Resize (double multiplier) {
          _capacity = (int)(_capacity * multiplier);
          Array.Resize (ref array, _capacity);
       }
