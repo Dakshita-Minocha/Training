@@ -12,7 +12,6 @@ namespace Training {
    #region class Program ------------------------------------------------------------------------
    internal class Program {
       #region Method ----------------------------------------------
-      static int high = 101, low = 1, bGuess = high / 2;
       static void Main (string[] args) => Menu ();
 
       static void Menu () {
@@ -29,8 +28,8 @@ namespace Training {
 
       /// <summary> Exit program if value guessed is correct. </summary>
       /// <param name="prompt"> User Input </param>
-      static void IsCorrect (string prompt) {
-         if (prompt.ToLower () == "yes") {
+      static void IsCorrect (char prompt) {
+         if (prompt == 'y') {
             Write ("\nYay! We guessed it!\nDo you want to exit(y/n)? \n");
             if (ReadKey (true).Key == ConsoleKey.Y)
                Environment.Exit (0);
@@ -38,27 +37,28 @@ namespace Training {
          }
       }
 
-      ///<summary> Using Binary Search algorithm for guessing number. </summary>
+      /// <summary> Using Binary Search algorithm for guessing number. </summary>
       static void GuessNumberBinaryMSB_LSB () {
+         int high = 101, low = 1, guess = high / 2;
          do {
-            Write ($"\nIs {bGuess} higher than/lower than/equal to your number (yes/high/low)? ");
-            string prompt = ReadLine ();
+            Write ($"\nIs {guess} higher than/lower than/equal to your number (high [H] / low [L] / yes [Y])? ");
+            char prompt = char.ToLower (ReadKey (true).KeyChar);
             IsCorrect (prompt);
-            if (prompt is "high") high = bGuess;
-            else low = bGuess;
-            bGuess = (low + high) / 2;
+            if (prompt is 'h') high = guess;
+            else if (prompt is 'l') low = guess;
+            guess = (low + high) / 2;
          } while (high > low);
       }
 
       /// <summary> Using Reverse Binary search algorithm to guess number. </summary>
       static void GuessNumberLSB_MSB () {
-         double sum = 0;
+         double guess = 0;
          for (int i = 1; i <= 7; i++) {
             Write ($"\nIs your number % {Math.Pow (2, i)} < {Math.Pow (2, i - 1)} (y/n)? ");
-            if (ReadKey ().Key == ConsoleKey.N) sum += Math.Pow (2, i - 1);
+            if (ReadKey ().Key == ConsoleKey.N) guess += Math.Pow (2, i - 1);
          }
-         Write ($"\nYour number is {sum}");
-         IsCorrect ("yes");
+         Write ($"\nYour number is {guess}");
+         IsCorrect ('y');
       }
       #endregion
    }
