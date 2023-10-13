@@ -28,8 +28,9 @@ namespace Training {
 
       /// <summary>Exit program if value guessed is correct.</summary>
       /// <param name="prompt">User Input</param>
-      static void IsCorrect (object prompt) {
+      static void IsCorrect (object prompt, object guess) {
          if (prompt is ConsoleKey.Y) {
+            Write ($"\nYour number is {guess}.\n");
             Write ("\nYay! We guessed it!\nDo you want to exit (y/n)? \n");
             if (ReadKey (true).Key == ConsoleKey.Y)
                Environment.Exit (0);
@@ -42,8 +43,8 @@ namespace Training {
          int high = 101, low = 1, guess = high / 2;
          do {
             Write ($"\nIs {guess} higher than/lower than/equal to your number ((H)igh / (L)ow / (Y)es)? ");
-            var prompt = ReadKey (true).Key;
-            IsCorrect (prompt);
+            var prompt = ReadKey ().Key;
+            IsCorrect (prompt, guess);
             if (prompt is ConsoleKey.H) high = guess;
             else if (prompt is ConsoleKey.L) low = guess;
             guess = (low + high) / 2;
@@ -57,8 +58,7 @@ namespace Training {
             Write ($"\nIs your number % {Math.Pow (2, i)} < {Math.Pow (2, i - 1)} (y/n)? ");
             if (ReadKey ().Key == ConsoleKey.N) guess += Math.Pow (2, i - 1);
          }
-         Write ($"\nYour number is {guess}");
-         IsCorrect (ConsoleKey.Y);
+         IsCorrect (ConsoleKey.Y, guess);
       }
       #endregion
    }
