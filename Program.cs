@@ -15,7 +15,7 @@ namespace Training {
       static void Main (string[] args) => Menu ();
 
       static void Menu () {
-         WriteLine ("Would you like to guess with Binary Method from MSB-LSB(M) or in Reverse Order from LSB-MSB(L)?\nPress (Q) to quit.");
+         WriteLine ("Would you like to guess with Binary Method from (M)SB-LSB or in Reverse Order from (L)SB-MSB?\nPress (Q) to quit.");
          var key = ReadKey (true).Key;
          switch (key) {
             case ConsoleKey.M: GuessNumberBinaryMSB_LSB (); break;
@@ -26,31 +26,31 @@ namespace Training {
          }
       }
 
-      /// <summary> Exit program if value guessed is correct. </summary>
-      /// <param name="prompt"> User Input </param>
-      static void IsCorrect (char prompt) {
-         if (prompt == 'y') {
-            Write ("\nYay! We guessed it!\nDo you want to exit(y/n)? \n");
+      /// <summary>Exit program if value guessed is correct.</summary>
+      /// <param name="prompt">User Input</param>
+      static void IsCorrect (object prompt) {
+         if (prompt is ConsoleKey.Y) {
+            Write ("\nYay! We guessed it!\nDo you want to exit (y/n)? \n");
             if (ReadKey (true).Key == ConsoleKey.Y)
                Environment.Exit (0);
             Menu ();
          }
       }
 
-      /// <summary> Using Binary Search algorithm for guessing number. </summary>
+      /// <summary>Using Binary Search algorithm for guessing number.</summary>
       static void GuessNumberBinaryMSB_LSB () {
          int high = 101, low = 1, guess = high / 2;
          do {
-            Write ($"\nIs {guess} higher than/lower than/equal to your number (high [H] / low [L] / yes [Y])? ");
-            char prompt = char.ToLower (ReadKey (true).KeyChar);
+            Write ($"\nIs {guess} higher than/lower than/equal to your number ((H)igh / (L)ow / (Y)es)? ");
+            var prompt = ReadKey (true).Key;
             IsCorrect (prompt);
-            if (prompt is 'h') high = guess;
-            else if (prompt is 'l') low = guess;
+            if (prompt is ConsoleKey.H) high = guess;
+            else if (prompt is ConsoleKey.L) low = guess;
             guess = (low + high) / 2;
          } while (high > low);
       }
 
-      /// <summary> Using Reverse Binary search algorithm to guess number. </summary>
+      /// <summary>Using Reverse Binary search algorithm to guess number.</summary>
       static void GuessNumberLSB_MSB () {
          double guess = 0;
          for (int i = 1; i <= 7; i++) {
@@ -58,7 +58,7 @@ namespace Training {
             if (ReadKey ().Key == ConsoleKey.N) guess += Math.Pow (2, i - 1);
          }
          Write ($"\nYour number is {guess}");
-         IsCorrect ('y');
+         IsCorrect (ConsoleKey.Y);
       }
       #endregion
    }
