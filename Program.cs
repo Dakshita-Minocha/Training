@@ -22,28 +22,22 @@ namespace Training {
                     "\n([z, y, x], a) -- Ascending order: default\n" + "Enter \"exit\" to exit\n");
          for (; ; ) {
             char specialchar;
-            char[] filtered;
             Write ("Enter String: ");
-            string input = ReadLine ().Trim ().ToLower ();
-            if (input == "" || input == null) continue;
-            if (input.ToLower () == "exit") return;
-            while (true) {
-               Write ("Enter special character from string: ");
-               specialchar = ReadLine ().First ();
-               if (input.Contains (specialchar)) break;
-            }
+            string input = ReadLine ().Trim ().ToLower () ?? "";
+            if (input == "") continue;
+            if (input.ToLower () == "exit") break;
+            Write ("Enter special character: ");
+            specialchar = ReadLine ().FirstOrDefault ();
             string spc = string.Join (", ", input.Where (x => x == specialchar).Select (x => x));
-            filtered = input.Where (x => char.IsLetter (x) && x != specialchar).Select (x => x).ToArray ();
+            char[] sort = input.Where (x => char.IsLetter (x) && x != specialchar).Select (x => x).ToArray ();
             Write ("Enter sorting order: ");
-            WriteLine ($"Sorted string: {Sort (filtered, ReadLine ().ToLower () == "descending")}, {spc}\n");
+            WriteLine ($"Sorted string: {Sort (sort, ReadLine ().ToLower () == "d")}{(spc == "" ? "" : ", ")}{spc}\n");
          }
-      }
 
-      /// <summary> Returns sorted string from input character array. </summary>
-      /// <param name="charArray"> Input array of characters </param>
-      /// <param name="orderdesc"> Default: false (ascending) </param>
-      static string Sort (char[] charArray, bool orderdesc = false)
+         /// Sorts character sequence based on input order
+         string Sort (char[] charArray, bool orderdesc = false)
                => string.Join (", ", orderdesc ? charArray.OrderByDescending (x => x) : charArray.Order ());
+      }
       #endregion
    }
    #endregion
