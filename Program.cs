@@ -3,9 +3,7 @@
 // Copyright (c) Metamation India.                                                
 // ---------------------------------------------------------------------------
 // Program.cs                                                                     
-// Program to swap indices from predefined array.
-// User enters two indices to swap and new array with swapped elements is displayed. 
-// Swapped elements and their indices are displayed in Green Foreground Color.
+// Program on main branch.
 // ---------------------------------------------------------------------------------------
 namespace Training {
    #region class Program ------------------------------------------------------------------------
