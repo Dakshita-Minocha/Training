@@ -12,38 +12,39 @@ namespace Training {
       #region Method ----------------------------------------------
       static void Main (string[] args) => CalculateVotes (GetString ());
 
-      /// <summary> Gets non-null input string from user. </summary>
-      /// <returns> string of votes. </returns>
+      /// <summary>Gets non-null input string from user.</summary>
+      /// <returns>string of votes.</returns>
       static string GetString () {
          string input;
          for (; ; ) {
             Console.Write ("Enter vote string: ");
-            input = Console.ReadLine ();
-            if (input is not "" or null && input.All (c => char.IsLetter (c))) break;
+            input = Console.ReadLine () ?? "";
+            if (input is not "" && input.All (c => char.IsLetter (c))) break;
          }
          return input.ToLower ();
       }
 
-      /// <summary> Calculates votes based on number of occurences of character in string. </summary>
-      /// <param name="votes"> Input string of votes </param>
+      /// <summary>Calculates votes based on number of occurences of character in string.</summary>
+      /// <param name="votes">Input string of votes</param>
       static void CalculateVotes (string votes) {
-         Dictionary<char, int> votingRegister = new ();
+         List<(char candidate, int votes)> votingRegister = new ();
          foreach (var vote in votes) {
-            votingRegister.TryGetValue (vote, out int value);
-            votingRegister[vote] = value + 1;
+            int ind = votingRegister.IndexOf (votingRegister.Where (x => x.candidate == vote).FirstOrDefault ());
+            if (ind == -1) votingRegister.Add ((vote, 1));
+            else votingRegister[ind] = (votingRegister[ind].candidate, votingRegister[ind].votes + 1);
          }
-         (string candidate, int numofvotes) = Winner (votingRegister);
+         (char candidate, int numofvotes) = Winner (votingRegister);
          Console.WriteLine ($"Winner: {candidate} with {numofvotes} votes.");
       }
 
-      /// <summary> Finds winner based on given conditions: max no of votes or first occurence (if tied) </summary>
-      /// <param name="votingRegister"> Dictionary with key: candidate, value: no. of votes </param>
-      /// <param name="votes"> Input string of votes </param>
-      static (string, int) Winner (Dictionary<char, int> votingRegister) {
-         foreach (var vote in votingRegister.Keys)
-            if (votingRegister[vote] == votingRegister.Values.Max ())
-               return (vote.ToString ().ToUpper (), votingRegister[vote]);
-         return ("", 0);
+      /// <summary>Finds winner based on given conditions: max no of votes or first occurence (if tied)</summary>
+      /// <param name="votingRegister"> List with Tuple (candidate, no. of votes)</param>
+      static (char, int) Winner (List<(char candidate, int votes)> votingRegister) {
+         int max = votingRegister.OrderByDescending (x => x.votes).First ().votes;
+         foreach (var tup in votingRegister)
+            if (tup.votes == max)
+               return tup;
+         return (' ', 0);
       }
       #endregion
    }
