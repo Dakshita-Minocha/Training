@@ -7,10 +7,6 @@
 *.orig
 *.pdb
 *.obj
-*.css
-*.html
-*.svg
-*.js
 **/bin/
 */.vs/
 **/.vs/
