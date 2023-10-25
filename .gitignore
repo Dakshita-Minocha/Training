@@ -7,6 +7,14 @@
 *.orig
 *.pdb
 *.obj
+*.html
+*.svg
+*.css
+*.js
+ClassSolution/*.sln
+ClassSolution/MsTest/*.sln
+ClassSolution/Demo/*.sln
+ClassSolution/Classlib/*.sln
 **/bin/
 */.vs/
 **/.vs/
