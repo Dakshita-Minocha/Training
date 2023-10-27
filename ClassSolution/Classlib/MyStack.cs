@@ -2,7 +2,7 @@
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
 // Copyright (c) Metamation India.                                                
 // ------------------------------------------------------------------
-// Class1.cs                                                                     
+// MyStack.cs                                                                     
 // Classlib to implement a Stack<T> class using arrays as the underlying data structure.
 // The Stack<T> should start with an initial capacity of 4 and double its capacity when needed.
 // class TStack<T> {
@@ -18,7 +18,7 @@ namespace Classlib;
 public class MyStack<T> {
    #region Constructor ----------------------------------------------
    /// <summary>Creates a new stack with Capacity = 4.</summary>
-   public MyStack () => array = new T[Capacity];
+   public MyStack () => mArray = new T[Capacity];
    #endregion
 
    #region Properties -----------------------------------------------
@@ -39,21 +39,20 @@ public class MyStack<T> {
    /// <exception cref="InvalidOperationException">When Stack is Empty.</exception>
    public T Peek () {
       if (IsEmpty) throw new InvalidOperationException ("Stack Empty");
-      return array[Count - 1];
+      return mArray[Count - 1];
    }
 
    /// <summary>Pops top element off of Stack</summary>
    /// <exception cref="InvalidOperationException">When Stack is Empty.</exception>
    public T Pop () {
       if (IsEmpty) throw new InvalidOperationException ("Stack Empty");
-      return array[--Count];
+      return mArray[--Count];
    }
 
    /// <summary>Adds elements to top of Stack.</summary>
    public void Push (T value) {
       if (Count == Capacity) Resize (2);
-      array[Count] = value;
-      Count++;
+      mArray[Count++] = value;
    }
    #endregion
 
@@ -61,12 +60,12 @@ public class MyStack<T> {
    /// <summary>Resizes Stack to n times current Capacity.</summary>
    void Resize (int n) {
       mCapacity *= n;
-      Array.Resize (ref array, Capacity);
+      Array.Resize (ref mArray, Capacity);
    }
    #endregion
 
    #region Private Data ---------------------------------------------
-   T[] array;
+   T[] mArray;
    #endregion
 }
 #endregion

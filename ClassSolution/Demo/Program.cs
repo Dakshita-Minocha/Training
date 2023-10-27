@@ -3,12 +3,13 @@
 // Copyright (c) Metamation India.                                                
 // ------------------------------------------------------------------
 // Program.cs                                                                     
-// program to implement a custom MyList<T> class using arrays as the underlying data structure.
-// The MyList<T> should start with an initial capacity of 4 and double its capacity when needed. 
+// Program to implement a custom MyStack<T> class using arrays as the underlying data structure.
+// The MyStack<T> should start with an initial capacity of 4 and double its capacity when needed. 
 // ------------------------------------------------------------------------------------------------
 using Classlib;
 using static System.Console;
 namespace Demo;
+
 class Program {
    static void Main (string[] args) {
       MyStack<int> stack = new ();
