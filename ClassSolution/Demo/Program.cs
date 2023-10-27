@@ -9,7 +9,9 @@
 using Classlib;
 using static System.Console;
 namespace Demo;
+
 public class Program {
+   #region Method ---------------------------------------------------
    static void Main (string[] args) {
       MyList<int> list = new ();
       list.Add (3);  // index 0, count = 1
@@ -30,13 +32,16 @@ public class Program {
       Write ("Current list: ");
       for (int i = 0; i < list.Count; i++) Write ($"{list[i]} ");
       list.Insert (3, 5);
-      WriteLine ($"\n\nlist.Insert (3, 5): list.Count: {list.Count}");
-      WriteLine ($"list.Insert (3, 5): list.Capacity: {list.Capacity}");
+      WriteLine ($"\n\nlist.Insert (3, 5): list.Count: {list.Count} list.Capacity: {list.Capacity}");
       list.RemoveAt (4);
       WriteLine ($"list.RemoveAt (4): list.Count: {list.Count}");
       Write ("Current list: ");
       for (int i = 0; i < list.Count; i++) Write ($"{list[i]} ");
       list.Clear ();
       WriteLine ($"\n\nlist.Clear (); list.Count: {list.Count}");
+      Write ("Current list: ");
+      for (int i = 0; i < list.Count; i++) Write ($"{list[i]} ");
+      WriteLine ();
    }
+   #endregion
 }

@@ -6,13 +6,12 @@
 // Class Library to implement a custom MyList<T> class using arrays as the underlying data structure.
 // The MyList<T> should start with an initial capacity of 4 and double its capacity when needed. 
 // ------------------------------------------------------------------------------------------------
-using static System.Console;
-
 namespace Classlib;
+
 #region class MyList ---------------------------------------------------------------------------
 public class MyList<T> {
    #region Constructor -------------------------------------------
-   public MyList () => array = new T[Capacity];
+   public MyList () => mArray = new T[Capacity];
    #endregion
 
    #region Properties --------------------------------------------
@@ -22,34 +21,45 @@ public class MyList<T> {
 
    /// <summary>Number of non-null elements in list</summary>
    public int Count { get; private set; }
+
+   /// <summary>Allows user to access elements by specifying index within index specifiers[]: list[index]</summary>
+   /// <returns>Value of element in list at index</returns>
+   /// <exception cref="IndexOutOfRangeException">If specified Index is out of range [0, Count)</exception>
+   public T this[int index] {
+      get {
+         CheckIndex (index);
+         return mArray[index];
+      }
+      set {
+         CheckIndex (index);
+         mArray[index] = value;
+      }
+   }
    #endregion
 
    #region Method ------------------------------------------------
    /// <summary>Adds {value} to end of current list</summary>
    public void Add (T value) {
       if (Count == Capacity) Resize (2);
-      array[Count++] = value;
+      mArray[Count++] = value;
    }
 
    /// <summary>Clears all elements of list</summary>
    public void Clear () {
       Count = 0;
-      array = new T[Capacity];
+      Array.Clear (mArray);
    }
 
-   /// <summary>Inserts element in array at specified index.</summary>
+   /// <summary>Inserts element in mArray at specified index.</summary>
    /// <param name="index">Index value at which element is to be inserted.</param>
    /// <param name="value">Values of element</param>
    /// <exception cref="Exception">If specified Index is out of range [0, Count)</exception>
    public void Insert (int index, T value) {
       CheckIndex (index);
-      T[] temp = array.ToArray ();
-      for (int count = 0, i = 0; count < Count + 1; count++)
-         if (count != index) {
-            if (count == Capacity) Resize (2);
-            array[count] = temp[i++];
-         }
-      array[index] = value;
+      if (Count == Capacity) Resize (2);
+      for (int i = Count; i > index; i--)
+         mArray[i] = mArray[i - 1];
+      mArray[index] = value;
       Count++;
    }
 
@@ -58,45 +68,25 @@ public class MyList<T> {
    /// <returns>true if Value has been removed</returns>
    /// <exception cref="InvalidOperationException">If value does not exist in list</exception>
    public bool Remove (T value) {
-      if (!array.Any (x => x.Equals (value)))
-         throw new InvalidOperationException (nameof (value) + " does not exist in list.");
-      int index = Array.IndexOf (array, value);
-      for (int i = 0, count = 0; i < Capacity; i++)
-         if (i != index) array[count++] = array[i];
-      if (--Count <= Capacity / 2) Resize (0.5);
+      int index = Array.IndexOf (mArray, value, 0, Count);
+      if (index == -1) throw new InvalidOperationException (nameof (value) + " does not exist in list.");
+      for (int i = index; i < Count; i++)
+         mArray[i] = mArray[i + 1]; 
+      mArray[--Count] = default!;
       return true;
    }
 
    /// <summary>Remove element at specified index</summary>
    /// <param name="index">Specified index</param>
    /// <exception cref="IndexOutOfRangeException">If specified index is out of range [0, Count)</exception>
-   public void RemoveAt (int index) {
-      CheckIndex (index);
-      for (int i = 0, count = 0; i < Count; i++)
-         if (i != index) array[count++] = array[i];
-      if (--Count <= Capacity / 2) Resize (0.5);
-   }
-
-   /// <summary>Allows user to access elements by specifying index within index specifiers[]: list[index]</summary>
-   /// <returns>Value of element in list at index</returns>
-   /// <exception cref="IndexOutOfRangeException">If specified Index is out of range [0, Count)</exception>
-   public T this[int index] {
-      get {
-         CheckIndex (index);
-         return array[index];
-      }
-      set {
-         CheckIndex (index);
-         array[index] = value;
-      }
-   }
+   public void RemoveAt (int index) => Remove (mArray[index]); 
    #endregion
 
    #region Implementation ----------------------------------------
-   /// <summary> Resizes Array to double current capacity </summary>
-   void Resize (double multiplier) {
-      mCapacity = (int)(mCapacity * multiplier);
-      Array.Resize (ref array, Capacity);
+   /// <summary>Resizes Array to increase current capacity by n times.</summary>
+   void Resize (double n) {
+      mCapacity = (int)(mCapacity * n);
+      Array.Resize (ref mArray, Capacity);
    }
 
    /// <summary>Checks value of index and throws exception if necessary</summary>
@@ -108,7 +98,7 @@ public class MyList<T> {
    #endregion
 
    #region Private Data ------------------------------------------
-   T[] array;
+   T[] mArray;
    #endregion
 }
 #endregion
