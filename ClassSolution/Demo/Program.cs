@@ -7,7 +7,7 @@
 // The queue should grow the queue when needed (like the TStack above does).
 // If the queue does not have to be grown, both Enqueue and Dequeue should be
 // constant time (O(1)) operations.Throw exceptions as needed. 
-// class TQueue<T> {
+// class MyQueue<T> {
 //    public void Enqueue (T a) { }
 //    public T Dequeue () { }
 //    public T Peek () { }
@@ -17,14 +17,14 @@
 // ------------------------------------------------------------------------------------------------
 using Classlib;
 using static System.Console;
-
 namespace demo;
+
 #region class Program ------------------------------------------------------------------------
 internal class Program {
    #region Method ----------------------------------------------
    static void Main (string[] args) {
       WriteLine ("Implementing Queues (First in - First Out) using arrays: ");
-      TQueue<int> queue = new ();
+      MyQueue<int> queue = new ();
       queue.Enqueue (1);
       queue.Enqueue (2);
       queue.Enqueue (3);
