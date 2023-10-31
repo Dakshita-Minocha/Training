@@ -8,24 +8,26 @@ public class TestMyQueueT {
    public void TestDequeue () {
       Assert.IsTrue (mMyQueue.IsEmpty);
       Assert.ThrowsException<InvalidOperationException> (() => mMyQueue.Dequeue ());
-      mMyQueue.Enqueue (1);
-      mMyQueue.Enqueue (2);
-      mMyQueue.Enqueue (3);
-      mQueue.Enqueue (1);
-      mQueue.Enqueue (2);
-      mQueue.Enqueue (3);
+      for (int i = 1; i < 5; i++) {
+         mMyQueue.Enqueue (i);
+         mQueue.Enqueue (i);
+      }
+      Assert.AreEqual (mQueue.Dequeue (), mMyQueue.Dequeue ());
+      Assert.AreEqual (mQueue.Dequeue (), mMyQueue.Dequeue ());
+      for (int i = 5; i < 7; i++) {
+         mMyQueue.Enqueue (i);
+         mQueue.Enqueue (i);
+      }
       Assert.AreEqual (mQueue.Dequeue (), mMyQueue.Dequeue ());
       Assert.IsFalse (mMyQueue.IsEmpty);
    }
 
    [TestMethod]
    public void TestEnqueue () {
-      mMyQueue.Enqueue (1);
-      mMyQueue.Enqueue (2);
-      mMyQueue.Enqueue (3);
-      mQueue.Enqueue (1);
-      mQueue.Enqueue (2);
-      mQueue.Enqueue (3);
+      for (int i = 1; i < 5; i++) {
+         mMyQueue.Enqueue (i);
+         mQueue.Enqueue (i);
+      }
       Assert.AreEqual (mQueue.Count, mMyQueue.Count);
       mMyQueue.Enqueue (4);
       mMyQueue.Enqueue (5);
@@ -41,22 +43,22 @@ public class TestMyQueueT {
    public void TestPeek () {
       Assert.IsTrue (mMyQueue.IsEmpty);
       Assert.ThrowsException<InvalidOperationException> (() => mMyQueue.Peek ());
-      mMyQueue.Enqueue (1);
-      mMyQueue.Enqueue (2);
-      mMyQueue.Enqueue (3);
-      mQueue.Enqueue (1);
-      mQueue.Enqueue (2);
-      mQueue.Enqueue (3);
-      Assert.AreEqual (mQueue.Peek (), mMyQueue.Peek ());
+      for (int i = 0; i < 3; i++) {
+         mMyQueue.Enqueue (i);
+         mQueue.Enqueue (i);
+         Assert.AreEqual (mQueue.Peek (), mMyQueue.Peek ());
+      }
       Assert.AreEqual (mQueue.Count, mMyQueue.Count);
    }
 
    [TestMethod]
    public void TestToString () {
-      mMyQueue.Enqueue (1);
-      mMyQueue.Enqueue (2);
-      mMyQueue.Enqueue (3);
+      for (int i = 1; i < 4; i++)
+         mMyQueue.Enqueue (i);
       Assert.AreEqual ("1 2 3 ", mMyQueue.ToString ());
+      for (int i = 4; i < 9; i++)
+         mMyQueue.Enqueue (i);
+      Assert.AreEqual ("1 2 3 4 5 6 7 8 ", mMyQueue.ToString ());
    }
    #endregion
 
