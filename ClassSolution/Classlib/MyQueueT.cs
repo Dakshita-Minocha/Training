@@ -40,15 +40,16 @@ public class MyQueue<T> {
    /// <exception cref="InvalidOperationException">If Queue is Empty.</exception>
    public T Dequeue () {
       if (IsEmpty) throw new InvalidOperationException ("Cannot Dequeue: Empty Queue");
-      (mStart, Count) = (mStart == Capacity - 1 ? 0 : mStart + 1, Count - 1);
-      return mArray[mStart == 0 ? Capacity - 1 : mStart - 1];
+      T ele = mArray[mStart];
+      (mStart, Count) = ((mStart + 1) % Capacity, Count - 1);
+      return ele;
    }
 
    /// <summary>Add item to end of Queue.</summary>
    public void Enqueue (T item) {
       if (Count == Capacity) Resize (2);
-      if (++mEnd == Capacity && Count < Capacity) mEnd = 0;
       (mArray[mEnd], Count) = (item, Count + 1);
+      mEnd = (mEnd + 1) % Capacity;
    }
 
    /// <summary>Peeks at the first element in Queue without removing it.</summary>
@@ -75,13 +76,13 @@ public class MyQueue<T> {
       T[] temp = new T[Capacity];
       for (int i = 0; i < Count; i++)
          temp[i] = mArray[(mStart + i) % Count];
-      (mArray, mStart, mEnd) = (temp, 0, Count - 1);
+      (mArray, mStart, mEnd) = (temp, 0, Count);
    }
    #endregion
 
    #region Private Data ---------------------------------------------
    T[] mArray;
-   int mEnd = -1, mStart;
+   int mEnd, mStart;
    #endregion
 }
 #endregion
