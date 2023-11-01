@@ -94,7 +94,7 @@ public class TestMyListT {
       for (int i = 0; i < mList.Count; i++)
          Assert.AreEqual (mList[i], mMyList[i]);
       Assert.ThrowsException<IndexOutOfRangeException> (() => mMyList.RemoveAt (-1));
-      Assert.ThrowsException<IndexOutOfRangeException> (() => mMyList.Insert (10, 2));
+      Assert.ThrowsException<IndexOutOfRangeException> (() => mMyList.RemoveAt(10));
    }
 
    [TestMethod]

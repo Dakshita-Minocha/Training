@@ -71,7 +71,7 @@ public class MyList<T> {
       int index = Array.IndexOf (mArray, value, 0, Count);
       if (index == -1) throw new InvalidOperationException (nameof (value) + " does not exist in list.");
       for (int i = index; i < Count; i++)
-         mArray[i] = mArray[i + 1]; 
+         mArray[i] = mArray[i + 1];
       mArray[--Count] = default!;
       return true;
    }
@@ -79,7 +79,7 @@ public class MyList<T> {
    /// <summary>Remove element at specified index</summary>
    /// <param name="index">Specified index</param>
    /// <exception cref="IndexOutOfRangeException">If specified index is out of range [0, Count)</exception>
-   public void RemoveAt (int index) => Remove (mArray[index]); 
+   public void RemoveAt (int index) => Remove (this[index]);
    #endregion
 
    #region Implementation ----------------------------------------
