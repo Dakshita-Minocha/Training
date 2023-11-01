@@ -1,17 +1,17 @@
-﻿// ---------------------------------------------------------------------------------------
+﻿// ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
 // Copyright (c) Metamation India.
-// ---------------------------------------------------------------------------
+// ------------------------------------------------------------------
 // Program.cs
 // Program to find and display general and fundamental sSolutions of the Eight Queen problem.
-// ---------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------
 using System.Text;
 using static System.Console;
 namespace Training;
 
-#region class Program ------------------------------------------------------------------------
+#region class Program -----------------------------------------------------------------------------
 internal class Program {
-   #region Method ----------------------------------------------
+   #region Method ---------------------------------------------------
    static void Main (string[] args) => Menu ();
 
    static void Menu () {
@@ -119,7 +119,7 @@ internal class Program {
    }
    #endregion
 
-   #region Private Data ------------------------------------------
+   #region Private Data ---------------------------------------------
    static int sSize = 8;
    static List<int[]> sSolutions = new ();
    static int[] sPositions = new int[sSize];
