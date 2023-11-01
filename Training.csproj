@@ -4,6 +4,13 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <OutDir>../bin/</OutDir>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ClassSolution\**" />
+    <EmbeddedResource Remove="ClassSolution\**" />
+    <None Remove="ClassSolution\**" />
+  </ItemGroup>
 
 </Project>
