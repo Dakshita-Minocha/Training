@@ -1,10 +1,10 @@
 ﻿// ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
-// Copyright (c) Metamation India.                                                
+// Copyright (c) Metamation India.
 // ------------------------------------------------------------------
-// Class1.cs                                                                     
+// Class1.cs
 // Class Library to implement a custom MyList<T> class using arrays as the underlying data structure.
-// The MyList<T> should start with an initial capacity of 4 and double its capacity when needed. 
+// The MyList<T> should start with an initial capacity of 4 and double its capacity when needed.
 // ------------------------------------------------------------------------------------------------
 namespace Classlib;
 

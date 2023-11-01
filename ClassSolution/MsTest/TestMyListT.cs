@@ -1,8 +1,8 @@
 // ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
-// Copyright (c) Metamation India.                                                
+// Copyright (c) Metamation India.
 // ------------------------------------------------------------------
-// UnitTest1.cs                                                                     
+// UnitTest1.cs
 // MS Test program to test custom MyList<T> class.
 // ------------------------------------------------------------------------------------------------
 using Classlib;

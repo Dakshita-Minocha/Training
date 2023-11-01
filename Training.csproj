@@ -7,17 +7,4 @@
     <OutDir>../bin</OutDir>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="PClassLib\**" />
-    <Compile Remove="PMSTest\**" />
-    <EmbeddedResource Remove="PClassLib\**" />
-    <EmbeddedResource Remove="PMSTest\**" />
-    <None Remove="PClassLib\**" />
-    <None Remove="PMSTest\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
-  </ItemGroup>
-
 </Project>
