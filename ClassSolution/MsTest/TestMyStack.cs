@@ -1,10 +1,10 @@
 // ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
-// Copyright (c) Metamation India.                                                
+// Copyright (c) Metamation India.
 // ------------------------------------------------------------------
-// TestMyStack.cs                                                                     
+// TestMyStack.cs
 // Test Program to cover a custom MyStack<T> class using arrays as the underlying data structure.
-// The MyStack<T> should start with an initial capacity of 4 and double its capacity when needed. 
+// The MyStack<T> should start with an initial capacity of 4 and double its capacity when needed.
 // ------------------------------------------------------------------------------------------------
 using Classlib;
 namespace MsTest;

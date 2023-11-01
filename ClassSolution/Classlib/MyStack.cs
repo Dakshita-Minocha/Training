@@ -1,8 +1,8 @@
 ﻿// ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
-// Copyright (c) Metamation India.                                                
+// Copyright (c) Metamation India.
 // ------------------------------------------------------------------
-// MyStack.cs                                                                     
+// MyStack.cs
 // Classlib to implement a Stack<T> class using arrays as the underlying data structure.
 // The Stack<T> should start with an initial capacity of 4 and double its capacity when needed.
 // class TStack<T> {
