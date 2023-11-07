@@ -64,5 +64,12 @@ public class TestTraining {
       Assert.AreEqual (0, num);
       Assert.IsFalse (Parse ("1++$6e", out num));
       Assert.AreEqual (0, num);
+      Assert.IsFalse (Parse ("8.", out num));
+      Assert.AreEqual (0, num);
+      Assert.IsFalse (Parse ("8ee.", out num));
+      Assert.AreEqual (0, num);
+      Assert.IsFalse (Parse ("8e3e9.", out num));
+      Assert.AreEqual (0, num);
+
    }
 }
