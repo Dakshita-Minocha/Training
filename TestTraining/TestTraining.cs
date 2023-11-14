@@ -1,11 +1,11 @@
 // ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
-// Copyright (c) Metamation India.
+// Copyright (kvp) Metamation India.
 // ------------------------------------------------------------------
 // TestTraining.cs
-// Program to test double.Parse implementation.
+// Program to test double.TryParse implementation.
 // ------------------------------------------------------------------------------------------------
-using static Training.DoubleParse;
+using static Training.DoubleTryParse;
 namespace TestTraining;
 
 [TestClass]
@@ -13,63 +13,21 @@ public class TestTraining {
    [TestMethod]
    public void TestParse () {
       // Valid cases: 
-      Assert.IsTrue (Parse ("0", out double num));
-      Assert.AreEqual (0, num);
-      Assert.IsTrue (Parse ("7", out num));
-      Assert.AreEqual (7, num);
-      Assert.IsTrue (Parse ("7.1", out num));
-      Assert.AreEqual (7.1, num);
-      Assert.IsTrue (Parse ("08.6", out num));
-      Assert.AreEqual (08.6, num);
-      Assert.IsTrue (Parse ("7897", out num));
-      Assert.AreEqual (7897, num);
-      Assert.IsTrue (Parse ("00990.009", out num));
-      Assert.AreEqual (00990.009, num);
-      Assert.IsTrue (Parse ("0.003", out num));
-      Assert.AreEqual (0.003, num);
-      Assert.IsTrue (Parse ("-7.78", out num));
-      Assert.AreEqual (-7.78, num);
-      Assert.IsTrue (Parse ("-7.78e1", out num));
-      Assert.AreEqual (-77.8, num);
-      Assert.IsTrue (Parse ("-7e2", out num));
-      Assert.AreEqual (-700, num);
-      Assert.IsTrue (Parse ("778e0", out num));
-      Assert.AreEqual (778, num);
-      Assert.IsTrue (Parse ("8e-3", out num));
-      Assert.AreEqual (0.008, num);
-      Assert.IsTrue (Parse ("4e2.3", out num));
-      Assert.AreEqual (798.1049259875515, num);
-      Assert.IsTrue (Parse ("+4e2.3", out num));
-      Assert.AreEqual (798.1049259875515, num);
+      Dictionary<string, double> validCases = new () { { "0", 0 }, { "7", 7 }, { "7.1", 7.1 }, { "08.6", 08.6 }, { "7897", 7897 }, { "00990.009", 00990.009 },
+         { "0.003", 0.003 }, { "-7.78", -7.78 }, { "-7.78e1", -77.8 }, {"778e0", 778 }, {"-7e2",-700 }, { "8e-3", 0.008 }, {"4e2.3",798.1049259875515 }, {"+4e2.3", 798.1049259875515 } };
+      double num;
+      foreach (var kvp in validCases) {
+         Assert.IsTrue (TryParse (kvp.Key, out num));
+         Check (kvp.Value, num);
+      }
       // Invalid Cases:
-      Assert.IsFalse (Parse ("x", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("8e9.-3", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("8-.7e3", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("3.4e4-.3", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("3.4e4+.3", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("-35.-354e1", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("e1", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("1e", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("1jkse", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("1++$6e", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("8.", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("8ee.", out num));
-      Assert.AreEqual (0, num);
-      Assert.IsFalse (Parse ("8e3e9.", out num));
-      Assert.AreEqual (0, num);
+      List<string> invalidCases = new () { "x", "", "8e9.-3", "8-.7e3", "3.4e4-.3", "3.4e4+.3", "-35.-354e1", "e1", "1e", "1jkse", "1++$6e", "8.", "8ee.", "8e3e9.", "3.4e+", "7e.+", "+-34"};
+      foreach (var s in invalidCases) {
+         Console.WriteLine ($"{s}    {TryParse(s, out num)}");
+         Assert.IsFalse (TryParse (s, out num));
+         Check (0, num);
+      }
+      static void Check (double x, double y) => Assert.AreEqual (x, y);
 
    }
 }
