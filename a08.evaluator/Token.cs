@@ -28,6 +28,18 @@ abstract class TOperator : Token {
    readonly protected Evaluator mEval;
 }
 
+class TOpUnary : TOperator {
+   public TOpUnary (Evaluator eval, char ch) : base (eval) => Op = ch;
+   public char Op { get; private set; }
+   public override string ToString () => $"op:{Op}:{Priority}";
+   public override int Priority => 9 + mEval.BasePriority;
+
+   public double Evaluate (double a) => Op switch {
+      '+' => a,
+      '-' => -a,
+      _ => throw new EvalException ($"Unknown operator: {Op}")
+   };
+}
 class TOpArithmetic : TOperator {
    public TOpArithmetic (Evaluator eval, char ch) : base (eval) => Op = ch;
    public char Op { get; private set; }
