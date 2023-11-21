@@ -1,8 +1,8 @@
 ﻿// ------------------------------------------------------------------------------------------------
 // Training ~ A training program for new joinees at Metamation, Batch- July 2023.
-// Copyright (c) Metamation India.                                                
+// Copyright (c) Metamation India.
 // ------------------------------------------------------------------
-// Program.cs                                                                     
+// Program.cs
 // Program on main branch.
 // ------------------------------------------------------------------------------------------------
 namespace Training {
