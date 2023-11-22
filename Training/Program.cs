@@ -3,7 +3,7 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // Program.cs
-// Program to implement a file name parser using state machines.
+// Program to implement a file name parser using a Mealy State Machine.
 // ------------------------------------------------------------------------------------------------
 using static System.Console;
 using static Training.EState;
@@ -16,40 +16,39 @@ class Program {
          { "C:/words/words.txt", ("c", "words", "", "words.txt", ".txt")}
       };
       string[] invalidPaths = { "suppppp", "Ca:/workgit/hjh.txt", "c:\\Dakshita123.md", "C:\\workgit\\dakshita", "c:/dakshita.txt" };
-      foreach (var kvp in validPaths) 
+      foreach (var kvp in validPaths)
          Validate (kvp.Key);
       foreach (string path in invalidPaths)
          Validate (path);
 
-      static void Validate (string path) {
+      static void Validate (string path) =>
          WriteLine (Path.PathParse (path, out (string, string, string, string, string) ActOutput) + "\t" + ActOutput);
-      }
+
       //Path fp = new ("C:\\WorkGIT\\Dakshita\\Training.sln");
       //WriteLine (fp);
       //WriteLine (fp.FilePath);
-      //Path p = new ("suppppp");
-      //WriteLine (p.FilePath);
-      //if (Path.PathParse ("C:/words/words.txt", out (string drive, string dir, string path, string filename, string ext) filepath)) {
-      //   WriteLine (filepath);
-      //} else { WriteLine ("Invalid path"); }
    }
 }
 
 #region class Path --------------------------------------------------------------------------
 public class Path {
    #region Constructors ------------------------------------------
+   /// <summary>Creates new instance of a filepath</summary>
    public Path (string path) => mPath = path.Trim ().ToLower ();
    #endregion
 
    #region Properties ------------------------------------------
+   /// <summary>If path is valid, returns components of a file's path, else returns empty strings.</summary>
    public (string Drive, string Dir, string Path, string Filename, string Ext) FilePath {
       get {
+         // FilePath is computed only once for 1 instance of class (lazy evaluation).
          if (mComputed)
             return mFilePath;
          else {
             mValid = PathParse (mPath, out (string drive, string dir, string path, string filename, string ext) f);
-            mFilePath =  mValid? f : ("", "", "", "", "");
+            mFilePath = mValid ? f : ("", "", "", "", "");
             mComputed = true;
+            nComputations++;
             return mFilePath;
          }
       }
@@ -58,11 +57,30 @@ public class Path {
    (string drive, string dir, string path, string filename, string ext) mFilePath;
    bool mComputed = false;
 
-   public bool IsValid => mValid;
-   bool mValid = true;
+   /// <summary>Returns if current instance of Path is valid.</summary>
+   public bool IsValid {
+      get {
+         if (mComputed) return mValid;
+         else {
+            mValid = PathParse (mPath, out (string drive, string dir, string path, string filename, string ext) f);
+            mFilePath = mValid ? f : ("", "", "", "", "");
+            mComputed = true;
+            nComputations++;
+            return mValid;
+         }
+      }
+   }
+   bool mValid = false;
+
+   /// <summary> Keeps track of number of times PathParse is called to check working of lazy evaluation.</summary>
+   public int nComputations { get; private set; }
    #endregion
 
    #region Method ------------------------------------------------
+   /// <summary>Parses through input path to sort components if valid and returns true and false otherwise.</summary>
+   /// <param name="input">input file path</param>
+   /// <param name="filePath">Output components of path: Drive, Directory, Path (Drive + Directory), Filename and Extension.</param>
+   /// See file://FileParser_BNF.png
    public static bool PathParse (string input, out (string Drive, string Dir, string Path, string Filename, string Ext) filePath) {
       EState s = DriveA;
       Action none = () => { }, todo;
@@ -85,16 +103,17 @@ public class Path {
          todo ();
       }
       if (s == End) {
-         path = string.Join("", path.Replace ("\\", "/").Skip(1));
+         path = string.Join ("", path.Replace ("\\", "/").Skip (1));
          string[] parts = path.Split ('/');
          fileName = parts[^1] + ext;
-         path = string.Join ("/", parts.SkipLast (1));
+         path = dir + '/' + string.Join ("/", parts.SkipLast (1));
          filePath = (drive, dir, path, fileName, ext);
          return true;
       }
       return false;
    }
-   public override string ToString () => $"{(IsValid ? $"FileName: {FilePath.Filename}\nDrive: {FilePath.Drive}\nDirectory: {FilePath.Dir + FilePath.Path}\n" : $"Invalid Path {mPath}")}";
+
+   public override string ToString () => $"{(IsValid ? $"FileName: {FilePath.Filename}\nDrive: {FilePath.Drive}\nDirectory: {FilePath.Dir}\nFile Path: {FilePath.Path}\n" : $"Invalid Path {mPath}")}";
    #endregion
 }
 #endregion
