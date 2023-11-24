@@ -3,7 +3,7 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // TestTraining.cs
-// TestProgram for Double Ended Queue.
+// Test Program for Double Ended Queue.
 // ------------------------------------------------------------------------------------------------
 using Training;
 namespace TestTraining;
@@ -77,11 +77,11 @@ public class TestDoubleQueue {
       Assert.ThrowsException<InvalidOperationException> (() => Remove (q.Count + 1));
    }
 
-   /// <summary>Checks if two elements are equal</summary>
+   /// <summary>Checks if two elements are equal.</summary>
    public void Equals (string actual, string expected) =>
       Assert.AreEqual (expected, actual);
 
-   /// <summary>Randomly removes elements from front and back of queue</summary>
+   /// <summary>Randomly removes elements from front and back of queue.</summary>
    /// <param name="count">No of elements to remove</param>
    public void Remove (int count) {
       for (int i = 0; i < count; i++) {
@@ -93,8 +93,8 @@ public class TestDoubleQueue {
       }
    }
 
-   /// <summary>Randomly adds intergers to front and back of queue</summary>
-   /// <param name="count">No of integers to be added.</param>
+   /// <summary>Randomly adds intergers to front and back of queue.</summary>
+   /// <param name="count">No. of integers to be added.</param>
    public void AddtoQ (int count) {
       for (int i = 0; i < count; i++) {
          int r = random.Next (0, 2);

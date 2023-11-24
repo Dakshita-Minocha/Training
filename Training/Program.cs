@@ -5,6 +5,7 @@
 // Program.cs
 // Program to implement Double Ended Queue.
 // ------------------------------------------------------------------------------------------------
+using System.Text;
 using static System.Console;
 namespace Training;
 
@@ -29,17 +30,20 @@ internal class Program {
 }
 #endregion
 
-#region class DoubleQueue<T> ----------------------------------------------------------------------
+#region Class DoubleQueue<T> ----------------------------------------------------------------------
 public class DoubleQueue<T> {
    #region Constructors ---------------------------------------------
    public DoubleQueue () => mArray = new T[Capacity];
    #endregion
 
    #region Properties -----------------------------------------------
+   /// <summary>Number of elements queue can store without resizing.</summary>
    public int Capacity { get; private set; } = 4;
 
+   /// <summary>Number of elements in queue.</summary>
    public int Count { get; private set; }
 
+   /// <summary>Whether queue is empty.</summary>
    public bool IsEmpty => Count == 0;
    #endregion
 
@@ -85,13 +89,13 @@ public class DoubleQueue<T> {
 
    /// <summary>Returns string of all elements in queue separated by ' '.</summary>
    public override string ToString () {
-      string s = "";
+      StringBuilder s = new ();
       int start = mStart;
       for (int i = 0; i < Count; i++) {
-         s += mArray[start] + " ";
+         s.Append (mArray[start] + " ");
          start = (start + 1) % Capacity;
       }
-      return s;
+      return s.ToString ();
    }
    #endregion
 
