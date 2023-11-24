@@ -31,19 +31,20 @@ public class TestDoubleQueue {
       Equals (q.ToString (), "1 2 3 4 ");
       q.FrontDequeue ();
       q.BackEnqueue (5);
-      Equals (q.ToString (), "2 3 4 5 ");
+      q.BackEnqueue (5);
+      Equals (q.ToString (), "2 3 4 5 5 ");
       q.FrontDequeue ();
       q.FrontEnqueue (-1);
-      Equals (q, "-1 3 4 5 ");
+      Equals (q, "-1 3 4 5 5 ");
       q.FrontEnqueue (-2);
       Equals (q.Count, 5);
       Equals (q.Capacity, 8);
       q.FrontEnqueue (-3);
-      Equals (q, "-3 -2 -1 3 4 5 ");
+      Equals (q, "-3 -2 -1 3 4 5 5 ");
       q.BackEnqueue (1);
       q.BackEnqueue (2);
       q.BackEnqueue (4);
-      Equals (q, "-3 -2 -1 3 4 5 1 2 4 ");
+      Equals (q, "-3 -2 -1 3 4 5 1 2 4 5 ");
    }
 
    [TestMethod]

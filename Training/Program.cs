@@ -61,7 +61,7 @@ public class DoubleQueue<T> {
    /// <summary>Enqueues element at back-end of queue.</summary>
    /// <param name="value">Value to be enqueued.</param>
    public void BackEnqueue (T value) {
-      if (Count == Capacity) Resize (2);
+      if (Count == Capacity) Resize ();
       mArray[mEnd] = value;
       mEnd = (mEnd + 1) % Capacity;
       Count++;
@@ -81,7 +81,7 @@ public class DoubleQueue<T> {
    /// <summary>Enqueues element to start of queue.</summary>
    /// <param name="value">Value to be enqueued.</param>
    public void FrontEnqueue (T value) {
-      if (Count == Capacity) Resize (2);
+      if (Count == Capacity) Resize ();
       mStart = (Capacity + mStart - 1) % Capacity;
       mArray[mStart] = value;
       Count++;
@@ -104,15 +104,12 @@ public class DoubleQueue<T> {
    /// Elements are copied into new array from index Capacity/4 to index Capacity - Capacity/4
    /// to leave space for enqueue operations. Queue is resized every time either front of queue
    /// or back of queue runs out of space.</summary>
-   void Resize (int n) {
-      T[] temp = new T[Capacity * n];
-      int i = 0, tIn = Capacity / n;
-      Capacity *= n;
-      while (i < Count) {
-         temp[tIn] = mArray[(mStart + i++) % Count];
-         tIn = (tIn + 1) % Capacity;
-      }
-      (mArray, mStart, mEnd) = (temp, Capacity / 4, Capacity - Capacity / 4);
+   void Resize () {
+      T[] temp = new T[Capacity * 2];
+      Capacity *= 2;
+      for (int i = 0; i < Count; i++)
+         temp[i] = mArray[(mStart + i) % Count];
+      (mArray, mStart, mEnd) = (temp, 0, Count);
    }
    #endregion
 
