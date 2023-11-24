@@ -105,8 +105,8 @@ public class DoubleQueue<T> {
    /// to leave space for enqueue operations. Queue is resized every time either front of queue
    /// or back of queue runs out of space.</summary>
    void Resize () {
-      T[] temp = new T[Capacity * 2];
       Capacity *= 2;
+      T[] temp = new T[Capacity];
       for (int i = 0; i < Count; i++)
          temp[i] = mArray[(mStart + i) % Count];
       (mArray, mStart, mEnd) = (temp, 0, Count);
