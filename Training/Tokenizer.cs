@@ -21,7 +21,7 @@ class Tokenizer {
          switch (ch) {
             case ' ': continue;
             case '+' or '-':
-               if (tokens.Count == 0 || tokens[^1] is TBinary || tokens[^1] is TPunctuation { Punct: '(' })
+               if (tokens.Count == 0 || tokens[^1] is TUnary || tokens[^1] is TBinary || tokens[^1] is TPunctuation { Punct: '(' })
                   return new TUnary (mEval, ch);
                return new TBinary (mEval, ch);
             case '/' or '*' or '%' or '^' or '=': return new TBinary (mEval, ch);
