@@ -5,9 +5,6 @@
 // Evaluator.cs
 // Program to implement expression evaluator.
 // ------------------------------------------------------------------------------------------------
-using System;
-using static System.Console;
-
 namespace Training;
 #region Class Evaluator ---------------------------------------------------------------------------
 /// <summary>Used to define a new instance of an expression evaluator which retuns
@@ -29,34 +26,35 @@ public class Evaluator {
          tokens.Add (t);
       }
       if (tokens[^1] is TOperator) Error ("Invalid Expression");
+
       // Checking for assignment operator
       TVariable var = null!;
       if (tokens.Count > 1 && tokens[0] is TVariable tv && tokens[1] is TBinary { Op: '=' }) {
          var = tv;
          tokens.RemoveRange (0, 2);
       }
-      foreach (Token t in tokens)
-         Process (t);
-      while (mOperators.Count > 0)
-         ApplyOperator ();
+
+      // Processing
+      foreach (Token t in tokens) Process (t);
+      while (mOperators.Count > 0) ApplyOperator ();
+
       if (mOperators.Count != 0) Error ("Too many Operators");
       if (mOperands.Count != 1) Error ("Too many Operands");
+
       double result = Math.Round (mOperands.Pop (), 10);
-      if (var != null)
-         mVariables[var.Name] = result;
+      if (var != null) mVariables[var.Name] = result;
       return result;
    }
-   readonly Dictionary<string, double> mVariables = new ();
 
    /// <summary>Returns the value of the entered variable token.</summary>
    /// <param name="name">Variable name</param>
    /// <exception cref="EvalException">Throws Exception if user is
    /// trying to access value of unknown variable.</exception>
    public double GetVariable (string name) {
-      if (this.mVariables.TryGetValue (name, out double val))
-         return val;
+      if (mVariables.TryGetValue (name, out double val)) return val;
       throw new EvalException ($"Unknown Variable '{name}'");
    }
+   readonly Dictionary<string, double> mVariables = new ();
    #endregion
 
    #region Implementation -------------------------------------------
@@ -64,7 +62,11 @@ public class Evaluator {
    /// operands and pushes results onto top of operand stack.</summary>
    void ApplyOperator () {
       TOperator op = mOperators.Pop ();
-      double a = mOperands.Pop ();
+      double a;
+      try { a = mOperands.Pop (); } catch (Exception) {
+         mOperators.Push (op);
+         return;
+      }
       switch (op) {
          case TFunc fun:
             mOperands.Push (fun.Apply (a)); break;
@@ -85,11 +87,11 @@ public class Evaluator {
          case TNumber num:
             mOperands.Push (num.Value); break;
          case TPunctuation p:
-            if (p.Punct == '(') { BasePriority += 10; break; }
+            if (p.Punct == '(') break;
             ApplyOperator ();
             break;
          case TOperator op:
-            while (mOperators.Count != 0 && mOperators.Peek () is not TFunc && mOperators.Peek ().FinalPriority >= op.FinalPriority)
+            if (mOperators.Count != 0 && mOperators.Peek ().FinalPriority >= op.FinalPriority)
                ApplyOperator ();
             mOperators.Push (op); break;
          default: Error ("Token not implemented"); break;

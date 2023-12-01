@@ -1,12 +1,14 @@
-﻿namespace Training;
+﻿// ------------------------------------------------------------------------------------------------
+// Training ~ A training program for new joinees at Metamation, Batch- July 2023.
+// Copyright (c) Metamation India.
+// ------------------------------------------------------------------
+// Tokens.cs
+// Tokens used to implement expression evaluator.
+// ------------------------------------------------------------------------------------------------
+namespace Training;
 
 #region abstract Class Token ----------------------------------------------------------------------
 abstract class Token {
-}
-#endregion
-
-#region Class TError ------------------------------------------------------------------------------
-class TError : Token {
 }
 #endregion
 
@@ -45,9 +47,12 @@ public class EvalException : Exception {
 }
 #endregion
 
-#region Class TFunc -------------------------------------------------------------------------------
+#region Class TUnary ------------------------------------------------------------------------------
 class TUnary : TOperator {
-   public TUnary (Evaluator eval, char op) : base (eval) => Op = op;
+   public TUnary (Evaluator eval, char op) : base (eval) {
+      Op = op;
+      mFinalP = Priority + mEval.BasePriority;
+   }
    internal override int Priority => 9;
    public double Apply (double a) =>
       Op switch {
@@ -55,7 +60,9 @@ class TUnary : TOperator {
          '-' => -a,
          _ => throw new EvalException ("Unary Operator not Implemented")
       };
-   internal override int FinalPriority => Priority + mEval.BasePriority;
+   internal override int FinalPriority => mFinalP;
+   int mFinalP;
+
    public override string ToString () => $"TUnary {Op}";
    internal char Op { get; private set; }
 }
@@ -63,9 +70,13 @@ class TUnary : TOperator {
 
 #region Class TFunc -------------------------------------------------------------------------------
 class TFunc : TOperator {
-   internal TFunc (Evaluator eval, string func) : base (eval) => Op = func;
+   internal TFunc (Evaluator eval, string func) : base (eval) {
+      Op = func;
+      mFinalP = Priority + mEval.BasePriority;
+   }
    internal override int Priority => 6;
-   internal override int FinalPriority => Priority + mEval.BasePriority;
+   internal override int FinalPriority => mFinalP;
+   int mFinalP;
 
    public double Apply (double a) =>
       Op switch {
@@ -95,7 +106,10 @@ class TFunc : TOperator {
 
 #region Class TBinary -----------------------------------------------------------------------------
 class TBinary : TOperator {
-   public TBinary (Evaluator eval, char ch) : base (eval) => Op = ch;
+   public TBinary (Evaluator eval, char ch) : base (eval) {
+      Op = ch;
+      mFinalP = Priority + mEval.BasePriority;
+   }
    internal override int Priority => Op switch {
       '=' => 0,
       '+' or '-' => 1,
@@ -104,7 +118,8 @@ class TBinary : TOperator {
       '^' => 4,
       _ => throw new EvalException ("Operator not implemented")
    };
-   internal override int FinalPriority => Priority + mEval.BasePriority;
+   internal override int FinalPriority => mFinalP;
+   int mFinalP;
 
    public double Apply (double a, double b) =>
       Op switch {
@@ -116,6 +131,7 @@ class TBinary : TOperator {
          '^' => Math.Pow (a, b),
          _ => 0
       };
+
    public override string ToString () => $"TBinary {Op}";
    public char Op { get; private set; }
 }
@@ -138,6 +154,3 @@ class TVariable : TNumber {
    public override string ToString () => $"TVariable {Name} = {Value}";
 }
 #endregion
-class Todo : Token {
-   public Todo (Action todo) => todo (); 
-}

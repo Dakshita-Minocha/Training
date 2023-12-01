@@ -14,11 +14,13 @@ class Tokenizer {
          switch (ch) {
             case ' ' or '\t': continue;
             case (>= '0' and <= '9') or '.': return GetNumber ();
-            case '(' or ')': return new TPunctuation (ch);
-            case '+' or '-': 
-               if (tokens.Count == 0 || tokens[^1] is TOpArithmetic || (tokens[^1] is TPunctuation {Punct: '(' }))
+            case '(' or ')':
+               mEval.BasePriority += ch == '(' ? 10 : -10;
+               return new TPunctuation (ch);
+            case '+' or '-':
+               if (tokens.Count == 0 || tokens[^1] is TOperator || (tokens[^1] is TPunctuation { Punct: '(' }))
                   return new TOpUnary (mEval, ch);
-            return new TOpArithmetic (mEval, ch);
+               return new TOpArithmetic (mEval, ch);
             case '*' or '/' or '^' or '=': return new TOpArithmetic (mEval, ch);
             case >= 'a' and <= 'z': return GetIdentifier ();
             default: return new TError ($"Unknown symbol: {ch}");

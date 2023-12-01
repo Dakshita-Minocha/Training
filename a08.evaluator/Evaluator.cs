@@ -6,6 +6,8 @@ class EvalException : Exception {
 
 class Evaluator {
    public double Evaluate (string text) {
+      mOperands.Clear ();
+      mOperators.Clear ();
       List<Token> tokens = new ();
       var tokenizer = new Tokenizer (this, text);
       for (; ; ) {
@@ -28,7 +30,7 @@ class Evaluator {
       return f;
    }
 
-   public int BasePriority { get; private set; }
+   internal int BasePriority { get; set; }
 
    public double GetVariable (string name) {
       if (mVars.TryGetValue (name, out double f)) return f;
@@ -42,13 +44,12 @@ class Evaluator {
             mOperands.Push (num.Value);
             break;
          case TOperator op:
-            while (mOperators.Count > 0 && mOperators.Peek ().Priority > op.Priority)
-               ApplyOperator ();
+            if (mOperators.Count != 0 && mOperators.Peek ().Priority > op.Priority) ApplyOperator ();
             mOperators.Push (op);
             break;
          case TPunctuation p:
-            BasePriority += p.Punct == '(' ? 10 : -10;
-            break;
+            if (p.Punct == '(') break;
+            ApplyOperator (); break;
          default:
             throw new EvalException ($"Unknown token: {token}");
       }
@@ -58,7 +59,10 @@ class Evaluator {
 
    void ApplyOperator () {
       var op = mOperators.Pop ();
-      var f1 = mOperands.Pop ();
+      double f1;
+      try {
+         f1 = mOperands.Pop ();
+      } catch (Exception) { mOperators.Push (op); return; }
       if (op is TOpArithmetic arith) {
          var f2 = mOperands.Pop ();
          mOperands.Push (arith.Evaluate (f2, f1));
