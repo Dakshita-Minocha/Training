@@ -42,12 +42,11 @@ public class PathParser {
    public (string Drive, string Dir, string Path, string Filename, string Ext) FilePath {
       get {
          // FilePath is computed only once for 1 instance of class (lazy evaluation).
-         if (!mComputed) Compute ();
+         if (mFilePath.Drive == null) Compute ();
          return mFilePath;
       }
    }
    (string Drive, string Dir, string Path, string Filename, string Ext) mFilePath;
-   bool mComputed = false;
 
    /// <summary>Returns if current instance of PathParser is valid.</summary>
    public bool IsValid {
@@ -56,7 +55,7 @@ public class PathParser {
          return mValid;
       }
    }
-   bool mValid = false;
+   bool mValid;
    #endregion
 
    #region Method ---------------------------------------------------
@@ -107,7 +106,6 @@ public class PathParser {
    void Compute () {
       mValid = PathParse (mInput, out (string Drive, string Dir, string Path, string Filename, string Ext) f);
       mFilePath = mValid ? f : ("", "", "", "", "");
-      mComputed = true;
       Computations++;
    }
 
