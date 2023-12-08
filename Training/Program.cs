@@ -45,17 +45,20 @@ public class Wordle {
    /// <summary>Run current instance of game.</summary>
    public void Run () {
       OutputEncoding = new UnicodeEncoding ();
-      Clear ();
-      WriteLine ("WORDLE");
-      DisplaySkeleton ();
-      do {
-         GetInput ();
-         mGuessNum--;
-      } while (mGuessNum > 0 && mCorrectGuess == false);
-      NextLine ();
-      Message (mCorrectGuess == true ?
-               $"Congrats! You got it rigght in just {6 - mGuessNum} guess{(mGuessNum == 5 ? "" : "es")}." :
-               $"Oops! The answer was {string.Join ("", mSecretWord)}. Better luck next time!", true);
+      for (; ; ) {
+         Clear ();
+         WriteLine ("WORDLE", ForegroundColor = ConsoleColor.White);
+         DisplaySkeleton ();
+         do {
+            GetInput ();
+            mGuessNum--;
+         } while (mGuessNum > 0 && mCorrectGuess == false);
+         NextLine ();
+         ResetColor ();
+         Message (mCorrectGuess == true ?
+                  $"Congrats! You got it right in just {6 - mGuessNum} guess{(mGuessNum == 5 ? "" : "es")}." :
+                  $"Oops! The answer was {string.Join ("", mSecretWord)}. Better luck next time!");
+      }
    }
    bool? mCorrectGuess;
    int mGuessNum = 6;
@@ -90,7 +93,6 @@ public class Wordle {
 
    /// <summary>Displaying basic body of Wordle.</summary>
    void DisplaySkeleton () {
-      ResetColor ();
       mCurrentCol = mStartCol = WindowWidth / 2 - mMaxWordLen; mRow = 1;
       ShiftTo (mStartCol, mRow);
       int tries = 6;
@@ -105,6 +107,9 @@ public class Wordle {
       mAlphaRow = mRow;
       PrintAlphabets ();
       mMessageRow = mRow + 1;
+      NextLine ();
+      NextLine ();
+      Write ("Press [Esc] to exit.");
       mRow = 1;
       mCurrentCol = mStartCol;
    }
@@ -123,16 +128,14 @@ public class Wordle {
    }
 
    /// <summary>Displays disappering messages (2 seconds) for user at the bottom of game console.</summary>
-   /// <param name="stay">For messages that should stay</param>
-   void Message (string msg, bool stay = false) {
+   void Message (string msg) {
       ShiftTo (mStartCol - mMaxWordLen, mMessageRow);
-      Write ($"{msg}", ForegroundColor = ConsoleColor.Red);
-      if (!stay) {
-         Thread.Sleep (2000);
-         ShiftTo (mStartCol - mMaxWordLen, mMessageRow);
-         Write (new string (' ', msg.Length));
-      }
-      ResetColor ();
+      Write ($"{msg}", ForegroundColor = ConsoleColor.Yellow);
+      ReadKey (true);
+      ShiftTo (mStartCol - mMaxWordLen, mMessageRow);
+      Write (new string (' ', msg.Length));
+      ForegroundColor = ConsoleColor.White;
+      ShiftTo (mCurrentCol, mRow);
    }
 
    /// <summary>Sets cursor to next line in same column</summary>
@@ -187,6 +190,9 @@ public class Wordle {
             mCursor = 0;
             if (mCorrectGuess == false) NextLine ();
             break;
+         case ConsoleKey.Escape:
+            ShiftTo (mStartCol, mMessageRow + 2);
+            Environment.Exit (0); break;
       }
    }
    #endregion
