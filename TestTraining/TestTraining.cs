@@ -13,19 +13,19 @@ public class TestTraining {
    [TestMethod]
    public void TestParsePath () {
       Dictionary<string, Path> validPaths = new () {
-         { "C:\\WorkGIT\\Dakshita\\Training.sln", new Path (("c", "workgit", "workgit/dakshita", "training.sln", ".sln"))},
-         { "C:/words/words.txt",  new Path (("c", "words", "words/", "words.txt", ".txt"))}
+         { "C:\\WorkGIT\\Dakshita\\Training.sln", new Path ("c", "workgit", "workgit/dakshita", "training.sln", ".sln")},
+         { "C:/words/words.txt",  new Path ("c", "words", "words/", "words.txt", ".txt")}
       };
       string[] invalidPaths = { "suppppp", "Ca:/workgit/hjh.txt", "c:\\Dakshita123.md", "C:\\workgit\\dakshita", "c:/dakshita.txt" };
       foreach (var kvp in validPaths)
          Validate (kvp.Key, kvp.Value);
-      var blank = new Path (("", "", "", "", ""));
+      var blank = new Path ("", "", "", "", "");
       foreach (string path in invalidPaths)
          Validate (path, blank);
 
       static void Validate (string path, Path expOutput) {
-         PathParse (path, out (string, string, string, string, string) ActOutput);
-         Assert.AreEqual (expOutput, new Path (ActOutput));
+         PathParse (path, out (string dr, string dir, string fp, string fn, string ext) ActOutput);
+         Assert.AreEqual (expOutput, new Path (ActOutput.dr, ActOutput.dir, ActOutput.fp, ActOutput.fn, ActOutput.ext));
       }
    }
 
@@ -48,9 +48,10 @@ public class TestTraining {
    #region Private Data ---------------------------------------------
    static readonly string NL = Environment.NewLine;
    struct Path {
-      (string, string, string, string, string) filePath;
-      public Path ((string drive, string dir, string path, string filename, string ext) fp) =>
-         filePath = (fp.drive, fp.dir, fp.path, fp.filename, fp.ext);
+      string Drive, Directory, FilePath, FileName, Extension;
+
+      public Path (string drive, string dir, string path, string filename, string ext) =>
+         (Drive, Directory, FilePath, FileName, Extension) = (drive, dir, path, filename, ext);
    }
    #endregion
 }
