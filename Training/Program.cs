@@ -13,8 +13,9 @@ namespace Training;
 internal class Program {
    #region Method ------------------------------------------------
    static void Main (string[] args) {
-      Wordle w = new Wordle ();
-      w.Run ();
+      Wordle w = new ();
+      for (; ; )
+         w.Run ();
    }
    #endregion
 }
@@ -27,41 +28,39 @@ public class Wordle {
    static Wordle () {
       mPuzzleWords = File.ReadAllLines ("C:/etc/Puzzle-5.txt");
       mDict = File.ReadAllLines ("C:/etc/Dict-5.txt");
+      CursorVisible = false;
    }
    static string[] mPuzzleWords, mDict;
 
    /// <summary>Create new Wordle Console Game</summary>
-   public Wordle () {
-      mInput = new ConsoleKey[5];
-      mSecretWord = mPuzzleWords[randomWord.Next (mPuzzleWords.Length)].ToCharArray ();
-      mCursor = 0;
-   }
-   static Random randomWord = new ();
+   public Wordle () => mInput = new ConsoleKey[5];
    ConsoleKey[] mInput;
-   char[] mSecretWord;
    #endregion
 
    #region Method ------------------------------------------------
    /// <summary>Run current instance of game.</summary>
    public void Run () {
       OutputEncoding = new UnicodeEncoding ();
-      for (; ; ) {
-         Clear ();
-         WriteLine ("WORDLE", ForegroundColor = ConsoleColor.White);
-         DisplaySkeleton ();
-         do {
-            GetInput ();
-            mGuessNum--;
-         } while (mGuessNum > 0 && mCorrectGuess == false);
-         NextLine ();
-         ResetColor ();
-         Message (mCorrectGuess == true ?
-                  $"Congrats! You got it right in just {6 - mGuessNum} guess{(mGuessNum == 5 ? "" : "es")}." :
-                  $"Oops! The answer was {string.Join ("", mSecretWord)}. Better luck next time!");
-      }
+      mCursor = 0; mGuessNum = 6; mCorrectGuess = null;
+      mSecretWord = mPuzzleWords[mRandomWord.Next (mPuzzleWords.Length)].ToCharArray ();
+      Clear ();
+      WriteLine ("WORDLE");
+      DisplaySkeleton ();
+      do {
+         GetInput ();
+         mGuessNum--;
+      } while (mGuessNum > 0 && mCorrectGuess == false);
+      NextLine ();
+      ResetColor ();
+      Message (mCorrectGuess == true ?
+               $"Congrats! You got it right in just {6 - mGuessNum} guess{(mGuessNum == 5 ? "" : "es")}." :
+               $"Oops! The answer was {string.Join ("", mSecretWord)}. Better luck next time!");
+      mState.Clear ();
    }
+   static Random mRandomWord = new ();
+   char[] mSecretWord;
    bool? mCorrectGuess;
-   int mGuessNum = 6;
+   int mGuessNum;
    #endregion
 
    #region Implementation ----------------------------------------
@@ -77,26 +76,25 @@ public class Wordle {
       }
       ShiftTo (mStartCol, mRow);
       for (int i = 0; i < mCursor; i++) {
-         State[input[i]] = ForegroundColor = input[i] == mSecretWord[i] ? ConsoleColor.Green :
+         mState[input[i]] = ForegroundColor = input[i] == mSecretWord[i] ? ConsoleColor.Green :
                            (mSecretWord.Any (x => x == input[i]) ? ConsoleColor.Blue : ConsoleColor.DarkGray);
          Write ($"{input[i]}   ");
       }
-      if (input.SequenceEqual (mSecretWord)) return true;
       (int c, int r) = (mCurrentCol, mRow);
       (mCurrentCol, mRow) = (mStartCol - mMaxWordLen, mAlphaRow);
       ShiftTo (mCurrentCol, mAlphaRow);
       PrintAlphabets ();
       (mCurrentCol, mRow) = (c, r);
+      if (input.SequenceEqual (mSecretWord)) return true;
       return false;
    }
-   Dictionary<char, ConsoleColor> State = new ();
+   Dictionary<char, ConsoleColor> mState = new ();
 
    /// <summary>Displaying basic body of Wordle.</summary>
    void DisplaySkeleton () {
       mCurrentCol = mStartCol = WindowWidth / 2 - mMaxWordLen; mRow = 1;
       ShiftTo (mStartCol, mRow);
-      int tries = 6;
-      for (int i = 0; i < tries; i++) {
+      for (int i = 0; i < mGuessNum; i++) {
          for (int j = 0; j < mMaxWordLen; j++) Write ($"·   ");
          NextLine ();
       }
@@ -107,8 +105,7 @@ public class Wordle {
       mAlphaRow = mRow;
       PrintAlphabets ();
       mMessageRow = mRow + 1;
-      NextLine ();
-      NextLine ();
+      NextLine (); NextLine ();
       Write ("Press [Esc] to exit.");
       mRow = 1;
       mCurrentCol = mStartCol;
@@ -127,15 +124,19 @@ public class Wordle {
       }
    }
 
-   /// <summary>Displays disappering messages (2 seconds) for user at the bottom of game console.</summary>
+   /// <summary>Displays disappering messages for user at the bottom of game console.</summary>
    void Message (string msg) {
-      ShiftTo (mStartCol - mMaxWordLen, mMessageRow);
-      Write ($"{msg}", ForegroundColor = ConsoleColor.Yellow);
+      ForegroundColor = ConsoleColor.Yellow;
+      Print ();
       ReadKey (true);
-      ShiftTo (mStartCol - mMaxWordLen, mMessageRow);
-      Write (new string (' ', msg.Length));
+      Print (true);
       ForegroundColor = ConsoleColor.White;
       ShiftTo (mCurrentCol, mRow);
+
+      void Print (bool blank = false) {
+         ShiftTo (mStartCol - mMaxWordLen, mMessageRow);
+         Write (blank ? new string (' ', msg.Length) : $"{msg}");
+      }
    }
 
    /// <summary>Sets cursor to next line in same column</summary>
@@ -144,13 +145,14 @@ public class Wordle {
    /// <summary>Prints bottom Alphabets for user reference with approriate colours.</summary>
    void PrintAlphabets () {
       int count = 0;
-      for (char i = 'A'; i <= 'Z'; i++, count++) {
-         if (count == 7) { count = 0; NextLine (); }
-         if (State.TryGetValue (i, out var color)) ForegroundColor = color;
-         else State[i] = ConsoleColor.White;
+      for (char i = 'A'; i <= 'Z'; i++) {
+         if (mState.TryGetValue (i, out var color)) ForegroundColor = color;
+         else mState[i] = ConsoleColor.White;
          Write ($"{i}   ");
-         ResetColor ();
+         if (count == 6) NextLine ();
+         count = (count + 1) % 7; // displaying 7 letters in a single line
       }
+      ResetColor ();
    }
 
    /// <summary>Shifts cursor to required column position in given row</summary>
@@ -160,30 +162,21 @@ public class Wordle {
    void UpdateState (ConsoleKey input) {
       switch (input) {
          case >= ConsoleKey.A and <= ConsoleKey.Z:
-            if (mCursor >= 5) {
-               Message ("Press [Enter] key to submit input or [BackSpace] to edit.");
-               break;
-            }
+            if (Error (mCursor >= 5, "Press [Enter] key to submit input or [BackSpace] to edit.")) break;
             // print input, set input array, increment cursor
             mInput[mCursor++] = input;
             Write ($"{mInput[mCursor - 1]}   ");
             mCurrentCol += mStrLen;
             break;
          case ConsoleKey.LeftArrow or ConsoleKey.Backspace:
-            if (mCursor <= 0) {
-               Message ("Enter word.");
-               break;
-            }
+            if (Error (mCursor <= 0, "Enter word.")) break;
             // decrement cursor, reprint element at previous position
             if (mCursor != 5) Write ($"·   ");
             mCursor--;
             mCurrentCol -= mStrLen;
             break;
          case ConsoleKey.Enter:
-            if (mCursor != 5) {
-               Message ("Enter full word before pressing [Enter] key.");
-               break;
-            }
+            if (Error (mCursor != 5, "Enter full word before pressing [Enter] key.")) break;
             // set input array cursor to zero, compare, if valid word: reprint line with colours, go to next line, if correct guess: return true.
             mCurrentCol = mStartCol;
             mCorrectGuess = CompareAndPrint (string.Join ("", mInput).ToCharArray ());
@@ -194,6 +187,12 @@ public class Wordle {
             ShiftTo (mStartCol, mMessageRow + 2);
             Environment.Exit (0); break;
       }
+
+      // Calls Message() if Error condition is met
+      bool Error (bool condition, string msg) {
+         if (condition) Message (msg);
+         return condition;
+      }
    }
    #endregion
 
@@ -203,3 +202,17 @@ public class Wordle {
    #endregion
 }
 #endregion
+//if (mCursor >= 5) {
+//   Message ("Press [Enter] key to submit input or [BackSpace] to edit.");
+//   break;
+//}
+
+//if (mCursor <= 0) {
+//   Message ("Enter word.");
+//   break;
+//}
+
+//if (mCursor != 5) {
+//   Message ("Enter full word before pressing [Enter] key.");
+//   break;
+//}
