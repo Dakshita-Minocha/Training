@@ -202,17 +202,3 @@ public class Wordle {
    #endregion
 }
 #endregion
-//if (mCursor >= 5) {
-//   Message ("Press [Enter] key to submit input or [BackSpace] to edit.");
-//   break;
-//}
-
-//if (mCursor <= 0) {
-//   Message ("Enter word.");
-//   break;
-//}
-
-//if (mCursor != 5) {
-//   Message ("Enter full word before pressing [Enter] key.");
-//   break;
-//}
