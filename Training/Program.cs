@@ -27,10 +27,10 @@ public class Wordle {
    /// <summary>Static constructor to read and close dict files.</summary>
    static Wordle () {
       mPuzzleWords = File.ReadAllLines ("C:/etc/Puzzle-5.txt");
-      mDict = File.ReadAllLines ("C:/etc/Dict-5.txt");
+      mDictionaryWords = File.ReadAllLines ("C:/etc/Dict-5.txt");
       CursorVisible = false;
    }
-   static string[] mPuzzleWords, mDict;
+   static string[] mPuzzleWords, mDictionaryWords;
 
    /// <summary>Create new Wordle Console Game</summary>
    public Wordle () => mInput = new ConsoleKey[5];
@@ -41,43 +41,43 @@ public class Wordle {
    /// <summary>Run current instance of game.</summary>
    public void Run () {
       OutputEncoding = new UnicodeEncoding ();
-      mCursor = 0; mGuessNum = 6; mCorrectGuess = null;
-      mSecretWord = mPuzzleWords[mRandomWord.Next (mPuzzleWords.Length)].ToCharArray ();
+      mCursor = 0; mGuessNum = 6;
+      mSecretWord = mPuzzleWords[mRandomWord.Next (mPuzzleWords.Length)];
       Clear ();
       WriteLine ("WORDLE");
       DisplaySkeleton ();
       do {
          GetInput ();
          mGuessNum--;
-      } while (mGuessNum > 0 && mCorrectGuess == false);
+      } while (mGuessNum > 0 && !mCorrectGuess);
       NextLine ();
       ResetColor ();
-      Message (mCorrectGuess == true ?
+      Message (mCorrectGuess ?
                $"Congrats! You got it right in just {6 - mGuessNum} guess{(mGuessNum == 5 ? "" : "es")}." :
                $"Oops! The answer was {string.Join ("", mSecretWord)}. Better luck next time!");
       mState.Clear ();
    }
    static Random mRandomWord = new ();
-   char[] mSecretWord;
-   bool? mCorrectGuess;
+   string mSecretWord;
+   bool mCorrectGuess;
    int mGuessNum;
    #endregion
 
    #region Implementation ----------------------------------------
    /// <summary>Checks if input is a valid word from dictionary,
    /// compares input with generated Secret Word, and re-prints coloured input as hints.</summary>
-   /// <returns> Null if input is not a valid word.
-   /// False if input is a valid wrd but is not the secret word.
-   /// True if input is the secret word.</returns>
-   bool? CompareAndPrint (char[] input) {
-      if (!mDict.Any (x => x.SequenceEqual (string.Join ("", input)))) {
+   /// <returns> True if input is Secret word else false.</returns>
+   bool CompareAndPrint (string input) {
+      if (!mDictionaryWords.Contains (string.Join ("", input))) {
          Message ("Enter valid word.");
-         return null;
+         mCursor = 0;
+         return false;
       }
       ShiftTo (mStartCol, mRow);
       for (int i = 0; i < mCursor; i++) {
          mState[input[i]] = ForegroundColor = input[i] == mSecretWord[i] ? ConsoleColor.Green :
-                           (mSecretWord.Any (x => x == input[i]) ? ConsoleColor.Blue : ConsoleColor.DarkGray);
+                                              (mSecretWord.Contains (input[i]) &&
+                                              input[..i].Count (a => a == input[i]) < mSecretWord.Count (x => x == input[i]) ? ConsoleColor.Blue : ConsoleColor.DarkGray);
          Write ($"{input[i]}   ");
       }
       (int c, int r) = (mCurrentCol, mRow);
@@ -85,8 +85,7 @@ public class Wordle {
       ShiftTo (mCurrentCol, mAlphaRow);
       PrintAlphabets ();
       (mCurrentCol, mRow) = (c, r);
-      if (input.SequenceEqual (mSecretWord)) return true;
-      return false;
+      return input == mSecretWord;
    }
    Dictionary<char, ConsoleColor> mState = new ();
 
@@ -100,21 +99,18 @@ public class Wordle {
       }
       mCurrentCol -= mMaxWordLen;
       NextLine ();
-      Write ("---------------------------");
-      NextLine ();
+      Write ("---------------------------"); NextLine ();
       mAlphaRow = mRow;
       PrintAlphabets ();
       mMessageRow = mRow + 1;
       NextLine (); NextLine ();
       Write ("Press [Esc] to exit.");
-      mRow = 1;
-      mCurrentCol = mStartCol;
+      (mCurrentCol, mRow) = (mStartCol, 1);
    }
 
    /// <summary>Maintains Display state as user inputs and calls UpdateState() after each input.</summary>
    void GetInput () {
-      mCorrectGuess = null;
-      while (mCursor <= 5 && mCorrectGuess == null) {
+      while (mCursor <= 5) {
          ShiftTo (mCurrentCol, mRow);
          if (mCursor != 5) {
             Write ("◌");
@@ -122,6 +118,7 @@ public class Wordle {
          }
          UpdateState (ReadKey (true).Key);
       }
+      mCursor = 0;
    }
 
    /// <summary>Displays disappering messages for user at the bottom of game console.</summary>
@@ -166,22 +163,23 @@ public class Wordle {
             // print input, set input array, increment cursor
             mInput[mCursor++] = input;
             Write ($"{mInput[mCursor - 1]}   ");
-            mCurrentCol += mStrLen;
+            mCurrentCol += 4;
             break;
          case ConsoleKey.LeftArrow or ConsoleKey.Backspace:
             if (Error (mCursor <= 0, "Enter word.")) break;
             // decrement cursor, reprint element at previous position
             if (mCursor != 5) Write ($"·   ");
             mCursor--;
-            mCurrentCol -= mStrLen;
+            mCurrentCol -= 4;
             break;
          case ConsoleKey.Enter:
             if (Error (mCursor != 5, "Enter full word before pressing [Enter] key.")) break;
             // set input array cursor to zero, compare, if valid word: reprint line with colours, go to next line, if correct guess: return true.
             mCurrentCol = mStartCol;
-            mCorrectGuess = CompareAndPrint (string.Join ("", mInput).ToCharArray ());
-            mCursor = 0;
-            if (mCorrectGuess == false) NextLine ();
+            mCorrectGuess = CompareAndPrint (string.Join ("", mInput));
+            if (mCursor == 0) break;
+            if (!mCorrectGuess) NextLine ();
+            mCursor = 6;
             break;
          case ConsoleKey.Escape:
             ShiftTo (mStartCol, mMessageRow + 2);
@@ -198,7 +196,7 @@ public class Wordle {
 
    #region Private Data ------------------------------------------
    int mCurrentCol, mRow, mCursor, mStartCol, mMessageRow, mAlphaRow;
-   readonly int mStrLen = "....".Length, mMaxWordLen = 5;
+   readonly int mMaxWordLen = 5;
    #endregion
 }
 #endregion
