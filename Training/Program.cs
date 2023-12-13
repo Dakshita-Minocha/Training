@@ -3,31 +3,27 @@
 // Copyright (c) Metamation India.
 // ------------------------------------------------------------------
 // Program.cs
-// Program on main branch.
+// Program to find anagrams of all words in words.txt and store them in file in given format.
 // ------------------------------------------------------------------------------------------------
-namespace Training {
-   #region class Program --------------------------------------------------------------------------
-   internal class Program {
-      #region Constructors ------------------------------------------
-      #endregion
+namespace Training;
 
-      #region Method ------------------------------------------------
-      static void Main (string[] args) {
-         Console.WriteLine ("Hello, World!");
-      }
-      #endregion
+#region class Program --------------------------------------------------------------------------
+internal class Program {
+   #region Method ------------------------------------------------
+   static void Main (string[] args) => Anagrams ();
 
-      #region Operators ---------------------------------------------
-      #endregion
+   static void Anagrams () {
+      string[] words = File.ReadAllLines ("C:/etc/words.txt");
+      var anagrams = words.GroupBy (word => string.Join ("", word.OrderBy (c => c)))
+                          .Where (group => group.Count () > 1)
+                          .Select (group => group.OrderBy (word => word).ToArray ());
 
-      #region Implementation ----------------------------------------
-      #endregion
-
-      #region Nested Types ------------------------------------------
-      #endregion
-
-      #region Private Data ------------------------------------------
-      #endregion 
+      var anaFile = File.Create ("C:/etc/Anagrams.txt");
+      using (var newfile = new StreamWriter (anaFile))
+         foreach (var list in anagrams.OrderByDescending (list => list.Length))
+            newfile.WriteLine ($"{list.Length} {string.Join (" ", list)}");
+      anaFile.Close ();
    }
    #endregion
 }
+#endregion
