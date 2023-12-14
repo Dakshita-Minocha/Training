@@ -18,11 +18,9 @@ internal class Program {
                           .Where (group => group.Count () > 1)
                           .Select (group => group.Order ().ToArray ()).OrderByDescending (group => group.Length);
 
-      var anaFile = File.Create ("C:/etc/Anagrams.txt");
-      using (var newfile = new StreamWriter (anaFile))
+      using (var newfile = new StreamWriter ("C:/etc/Anagrams.txt"))
          foreach (var list in anagrams)
             newfile.WriteLine ($"{list.Length} {string.Join (" ", list)}");
-      anaFile.Close ();
    }
    #endregion
 }
