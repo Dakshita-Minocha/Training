@@ -13,7 +13,7 @@ public class TestTraining {
    [TestMethod]
    public void TestWordleInput () {
       int FilePtr = 0;
-      string[] input = { "C:/etc/Wordle/wREFRight.txt", "C:/etc/Wordle/wREFWrong.txt" }, saveToFile = { "C:/etc/Wordle/wTestRight.txt", "C:/etc/Wordle/wTestWrong.txt" };
+      string[] input = { "../TestData/wREFRight.txt", "../TestData/wREFWrong.txt" }, saveToFile = { "../TestData/wTestRight.txt", "../TestData/wTestWrong.txt" };
       foreach (var file in input) {
          int count = 0;
          string[] refLines = File.ReadAllLines (file);
