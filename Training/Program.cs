@@ -5,8 +5,11 @@
 // Program.cs
 // Program to simulate the wordle game in a console app.
 // ------------------------------------------------------------------------------------------------
+using System.Runtime.CompilerServices;
 using System.Text;
 using static System.Console;
+
+[assembly: InternalsVisibleTo ("TestTraining")]
 namespace Training;
 
 #region Class Program --------------------------------------------------------------------------
@@ -28,56 +31,75 @@ public class Wordle {
    static Wordle () {
       mPuzzleWords = File.ReadAllLines ("C:/etc/Puzzle-5.txt");
       mDictionaryWords = File.ReadAllLines ("C:/etc/Dict-5.txt");
-      CursorVisible = false;
    }
    static string[] mPuzzleWords, mDictionaryWords;
 
    /// <summary>Create new Wordle Console Game</summary>
-   public Wordle () => mInput = new ConsoleKey[5];
+   public Wordle () { mInput = new ConsoleKey[5]; }
    ConsoleKey[] mInput;
+   #endregion
+
+   #region Properties ------------------------------------------
+   internal string SecretWord {
+      get => mSecretWord;
+      set => mSecretWord = value;
+   }
+   string mSecretWord;
    #endregion
 
    #region Method ------------------------------------------------
    /// <summary>Run current instance of game.</summary>
-   public void Run () {
+   public void Run (bool save = false, string saveToFile = null) {
       OutputEncoding = new UnicodeEncoding ();
       mCursor = 0; mGuessNum = 6;
-      mSecretWord = mPuzzleWords[mRandomWord.Next (mPuzzleWords.Length)];
+      SecretWord ??= mPuzzleWords[mRandomWord.Next (mPuzzleWords.Length)];
+      mFileName ??= saveToFile;
       Clear ();
       WriteLine ("WORDLE");
       DisplaySkeleton ();
       do {
          GetInput ();
-         mGuessNum--;
+         if (save) Save ();
       } while (mGuessNum > 0 && !mCorrectGuess);
-      NextLine ();
       ResetColor ();
       Message (mCorrectGuess ?
                $"Congrats! You got it right in just {6 - mGuessNum} guess{(mGuessNum == 5 ? "" : "es")}." :
-               $"Oops! The answer was {string.Join ("", mSecretWord)}. Better luck next time!");
+               $"Oops! The answer was {SecretWord}. Better luck next time!");
+      if (save) Save (-1);
       mState.Clear ();
+      SecretWord = null;
    }
    static Random mRandomWord = new ();
-   string mSecretWord;
    bool mCorrectGuess;
-   int mGuessNum;
+   int mGuessNum = 6;
    #endregion
 
    #region Implementation ----------------------------------------
    /// <summary>Checks if input is a valid word from dictionary,
    /// compares input with generated Secret Word, and re-prints coloured input as hints.</summary>
    /// <returns> True if input is Secret word else false.</returns>
-   bool CompareAndPrint (string input) {
-      if (!mDictionaryWords.Contains (string.Join ("", input))) {
+   void Compare (string input) {
+      if (!mDictionaryWords.Contains (input)) {
          Message ("Enter valid word.");
          mCursor = 0;
-         return false;
+         mCorrectGuess = false;
+         return;
       }
-      ShiftTo (mStartCol, mRow);
       for (int i = 0; i < mCursor; i++) {
-         mState[input[i]] = ForegroundColor = input[i] == mSecretWord[i] ? ConsoleColor.Green :
-                                              (mSecretWord.Contains (input[i]) &&
-                                              input[..i].Count (a => a == input[i]) < mSecretWord.Count (x => x == input[i]) ? ConsoleColor.Blue : ConsoleColor.DarkGray);
+         mState[input[i]] = input[i] == SecretWord[i] ? ConsoleColor.Green :
+                                        (SecretWord.Contains (input[i]) &&
+                                        input[..i].Count (a => a == input[i]) < SecretWord.Count (x => x == input[i]) ? ConsoleColor.Blue : ConsoleColor.DarkGray);
+      }
+      mGuessNum--;
+      mCorrectGuess = input == SecretWord;
+   }
+   internal Dictionary<char, ConsoleColor> mState = new ();
+
+   /// <summary>Updates console to display current state of game.</summary>
+   void DisplayUpdate (string input) {
+      ShiftTo (mStartCol, mRow);
+      for (int i = 0; i < mCursor - 1; i++) {
+         ForegroundColor = mState[input[i]];
          Write ($"{input[i]}   ");
       }
       (int c, int r) = (mCurrentCol, mRow);
@@ -85,12 +107,11 @@ public class Wordle {
       ShiftTo (mCurrentCol, mAlphaRow);
       PrintAlphabets ();
       (mCurrentCol, mRow) = (c, r);
-      return input == mSecretWord;
    }
-   Dictionary<char, ConsoleColor> mState = new ();
 
    /// <summary>Displaying basic body of Wordle.</summary>
    void DisplaySkeleton () {
+      CursorVisible = false;
       mCurrentCol = mStartCol = WindowWidth / 2 - mMaxWordLen; mRow = 1;
       ShiftTo (mStartCol, mRow);
       for (int i = 0; i < mGuessNum; i++) {
@@ -118,7 +139,11 @@ public class Wordle {
          }
          UpdateState (ReadKey (true).Key);
       }
-      mCursor = 0;
+      if (mCursor == 6) {
+         DisplayUpdate (string.Join ("", mInput));
+         mCursor = 0;
+         mRow++;
+      }
    }
 
    /// <summary>Displays disappering messages for user at the bottom of game console.</summary>
@@ -152,11 +177,24 @@ public class Wordle {
       ResetColor ();
    }
 
+   /// <summary>Saves current state of game to file, i = -1 for saving final result.</summary>
+   internal void Save (int i = 0) {
+      if (i != -1) {
+         File.AppendAllLines (mFileName, new string[] { string.Join ("", mInput) });
+         File.AppendAllLines (mFileName, mState.Select (kvp => $"{kvp.Key}: {kvp.Value}"));
+      } else {
+         string[] temp = File.ReadAllLines (mFileName);
+         File.WriteAllLines (mFileName, new string[] { SecretWord, $"{mCorrectGuess}", $"{6 - mGuessNum}" });
+         File.AppendAllLines (mFileName, temp);
+      }
+   }
+   internal string mFileName;
+
    /// <summary>Shifts cursor to required column position in given row</summary>
    void ShiftTo (int col, int row) => SetCursorPosition (col, row);
 
    /// <summary>Updates state of wordle game based on user inputs recieved from GetInput().</summary>
-   void UpdateState (ConsoleKey input) {
+   internal void UpdateState (ConsoleKey input) {
       switch (input) {
          case >= ConsoleKey.A and <= ConsoleKey.Z:
             if (Error (mCursor >= 5, "Press [Enter] key to submit input or [BackSpace] to edit.")) break;
@@ -174,11 +212,10 @@ public class Wordle {
             break;
          case ConsoleKey.Enter:
             if (Error (mCursor != 5, "Enter full word before pressing [Enter] key.")) break;
-            // set input array cursor to zero, compare, if valid word: reprint line with colours, go to next line, if correct guess: return true.
+            // compare input with secretword, set col back to start.
+            Compare (string.Join ("", mInput));
             mCurrentCol = mStartCol;
-            mCorrectGuess = CompareAndPrint (string.Join ("", mInput));
             if (mCursor == 0) break;
-            if (!mCorrectGuess) NextLine ();
             mCursor = 6;
             break;
          case ConsoleKey.Escape:
@@ -195,8 +232,9 @@ public class Wordle {
    #endregion
 
    #region Private Data ------------------------------------------
-   int mCurrentCol, mRow, mCursor, mStartCol, mMessageRow, mAlphaRow;
+   int mCurrentCol, mRow, mStartCol, mMessageRow, mAlphaRow;
    readonly int mMaxWordLen = 5;
+   internal int mCursor;
    #endregion
 }
 #endregion
