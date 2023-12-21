@@ -1,10 +1,10 @@
 ﻿namespace Eval;
 
-class EvalException : Exception {
+public class EvalException : Exception {
    public EvalException (string message) : base (message) { }
 }
 
-class Evaluator {
+public class Evaluator {
    public double Evaluate (string text) {
       mOperands.Clear ();
       mOperators.Clear ();
@@ -16,7 +16,7 @@ class Evaluator {
          if (token is TError err) throw new EvalException (err.Message);
          tokens.Add (token);
       }
-
+      if (tokens[^1] is TOperator) throw new EvalException ("Invalid Expression");
       // Check if this is a variable assignment
       TVariable? tVariable = null;
       if (tokens.Count > 2 && tokens[0] is TVariable tvar && tokens[1] is TOpArithmetic { Op: '=' }) {
@@ -25,9 +25,11 @@ class Evaluator {
       }
       foreach (var t in tokens) Process (t);
       while (mOperators.Count > 0) ApplyOperator ();
+      if (mOperators.Count > 0 || mOperands.Count == 0) throw new EvalException ("Too few operands");
+      if (mOperands.Count > 1) throw new EvalException ("Too many operands");
       double f = mOperands.Pop ();
       if (tVariable != null) mVars[tVariable.Name] = f;
-      return f;
+      return Math.Round (f, 10);
    }
 
    internal int BasePriority { get; set; }
@@ -44,7 +46,7 @@ class Evaluator {
             mOperands.Push (num.Value);
             break;
          case TOperator op:
-            if (mOperators.Count != 0 && mOperators.Peek ().Priority > op.Priority) ApplyOperator ();
+            if (mOperators.Count != 0 && mOperators.Peek ().Priority >= op.Priority) ApplyOperator ();
             mOperators.Push (op);
             break;
          case TPunctuation p:
@@ -59,12 +61,14 @@ class Evaluator {
 
    void ApplyOperator () {
       var op = mOperators.Pop ();
-      double f1;
+      double f1, f2;
       try {
          f1 = mOperands.Pop ();
       } catch (Exception) { mOperators.Push (op); return; }
       if (op is TOpArithmetic arith) {
-         var f2 = mOperands.Pop ();
+         try {
+            f2 = mOperands.Pop ();
+         } catch (Exception) { return; }
          mOperands.Push (arith.Evaluate (f2, f1));
       } else mOperands.Push (op is TOpUnary un ? un.Evaluate (f1) : ((TOpFunction)op).Evaluate (f1));
    }

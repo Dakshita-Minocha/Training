@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Training\Training.csproj" />
+    <ProjectReference Include="..\a08.evaluator\Eval.csproj" />
   </ItemGroup>
 
 </Project>
