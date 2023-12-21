@@ -21,7 +21,7 @@ public class TestTraining {
          {"log 10", 2.302585093 }, { "sqrt 100", 10 }, { "sqrt -100",double.NaN }, { "sqrt(10^2)", 10 }, { "(sqrt 100) - 10", 0 }, { "(tan 45)+10-20", -9 }, { "asin 1", 90 },
          { "acos 0", 90 }, { "(log 10)+5", 7.302585093 }, { "log(10+5)", 2.7080502011 }, { "log(-10+5)", double.NaN }, { "(sin 90)--1", 2 }, { "(sin -90)--1", 0 },
          { "sqrt(90+10)", 10 }, { "sqrt(110-10)", 10 }, { "atan 1", 45 }, { "asin -1", -90 }, { "atan -1", -45 }, { "(atan -1)+45", 0 },
-         { "exp 1", 2.7182818285 }, { "exp 1-2", .7182818285 }, { "exp(2-1)", 2.7182818285 }, { "exp -1", 0.3678794412 }
+         { "exp 1", 2.7182818285 }, { "exp 1-2", .7182818285 }, { "exp(2-1)", 2.7182818285 }, { "exp -1", 0.3678794412 }, { "2 - (3- (5))", 4}
          };
       Evaluator eval = new ();
       foreach (var input in EvalInput)
@@ -31,9 +31,9 @@ public class TestTraining {
    [TestMethod]
    public void TestExceptions () {
       Evaluator eval = new ();
-      string[] invalidInput = { "10 + * 3","10 + 2+", "10 2 -", " 3#4", "a + c", "10 3 * 4", "sin", "10 + +" }; 
+      string[] invalidInput = { "10 + * 3", "10 + 2+", "10 2 -", " 3#4", "a + c", "10 3 * 4", "sin", "10 + +", "2 - (3- (5)" };
       foreach (var item in invalidInput) {
-            Assert.ThrowsException<EvalException> (() => eval.Evaluate (item));
+         Assert.ThrowsException<EvalException> (() => eval.Evaluate (item));
       }
    }
 }

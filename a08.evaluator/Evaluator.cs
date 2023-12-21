@@ -27,6 +27,7 @@ public class Evaluator {
       while (mOperators.Count > 0) ApplyOperator ();
       if (mOperators.Count > 0 || mOperands.Count == 0) throw new EvalException ("Too few operands");
       if (mOperands.Count > 1) throw new EvalException ("Too many operands");
+      if (BasePriority != 0) throw new EvalException ("Invalid Expression");
       double f = mOperands.Pop ();
       if (tVariable != null) mVars[tVariable.Name] = f;
       return Math.Round (f, 10);
