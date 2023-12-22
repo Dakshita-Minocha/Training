@@ -9,12 +9,14 @@ public class Evaluator {
       mOperands.Clear ();
       mOperators.Clear ();
       List<Token> tokens = new ();
+      Token lastToken = null!;
       var tokenizer = new Tokenizer (this, text);
       for (; ; ) {
-         var token = tokenizer.Next (tokens);
+         var token = tokenizer.Next (lastToken);
          if (token is TEnd) break;
          if (token is TError err) throw new EvalException (err.Message);
          tokens.Add (token);
+         lastToken = token;
       }
       if (tokens[^1] is TOperator) throw new EvalException ("Invalid Expression");
       // Check if this is a variable assignment
@@ -27,10 +29,10 @@ public class Evaluator {
       while (mOperators.Count > 0) ApplyOperator ();
       if (mOperators.Count > 0 || mOperands.Count == 0) throw new EvalException ("Too few operands");
       if (mOperands.Count > 1) throw new EvalException ("Too many operands");
-      if (BasePriority != 0) throw new EvalException ("Invalid Expression");
+      if (BasePriority != 0) { BasePriority = 0; throw new EvalException ("Invalid Expression"); }
       double f = mOperands.Pop ();
       if (tVariable != null) mVars[tVariable.Name] = f;
-      return Math.Round (f, 10);
+      return f;
    }
 
    internal int BasePriority { get; set; }
@@ -47,14 +49,13 @@ public class Evaluator {
             mOperands.Push (num.Value);
             break;
          case TOperator op:
-            if (mOperators.Count != 0 && mOperators.Peek ().Priority >= op.Priority) ApplyOperator ();
+            while (mOperators.Count != 0 && mOperands.Count != 0 && mOperators.Peek ().Priority >= op.Priority) ApplyOperator ();
             mOperators.Push (op);
             break;
-         case TPunctuation p:
-            if (p.Punct == '(') break;
+         case TPunctuation p when p.Punct is '(':
+            break;
+         case TPunctuation p when p.Punct is ')':
             ApplyOperator (); break;
-         default:
-            throw new EvalException ($"Unknown token: {token}");
       }
    }
    readonly Stack<double> mOperands = new ();
@@ -62,10 +63,7 @@ public class Evaluator {
 
    void ApplyOperator () {
       var op = mOperators.Pop ();
-      double f1, f2;
-      try {
-         f1 = mOperands.Pop ();
-      } catch (Exception) { mOperators.Push (op); return; }
+      double f1 = mOperands.Pop (), f2;
       if (op is TOpArithmetic arith) {
          try {
             f2 = mOperands.Pop ();

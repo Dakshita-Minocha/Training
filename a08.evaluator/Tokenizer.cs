@@ -8,7 +8,7 @@ class Tokenizer {
    readonly string mText;     // The input text we're parsing through
    int mN;                    // Position within the text
 
-   public Token Next (List<Token> tokens) {
+   public Token Next (Token lastToken) {
       while (mN < mText.Length) {
          char ch = char.ToLower (mText[mN++]);
          switch (ch) {
@@ -18,7 +18,7 @@ class Tokenizer {
                mEval.BasePriority += ch == '(' ? 10 : -10;
                return new TPunctuation (ch);
             case '+' or '-':
-               if (tokens.Count == 0 || tokens[^1] is TOperator || (tokens[^1] is TPunctuation { Punct: '(' }))
+               if (lastToken is null || lastToken is TOperator or TPunctuation { Punct: '(' })
                   return new TOpUnary (mEval, ch);
                return new TOpArithmetic (mEval, ch);
             case '*' or '/' or '^' or '=': return new TOpArithmetic (mEval, ch);
