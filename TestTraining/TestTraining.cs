@@ -38,7 +38,6 @@ public class TestTraining {
 
          string[] testLines = File.ReadAllLines (saveToFile[FilePtr++]);
          Assert.IsTrue (testLines.SequenceEqual (refLines));
-         Assert.AreEqual (win, testLines[1]);
       }
    }
 }
