@@ -1,15 +1,7 @@
 ﻿namespace Eval;
 
 public class EvalException : Exception {
-   public EvalException (string message) : base (message) => LogException ();
-
-   void LogException () {
-      using (var logFile = new StreamWriter ($"C:/etc/LogFile.txt", true)) {
-         logFile.WriteLine (DateTime.Now);
-         logFile.WriteLine (">" + Evaluator.mText + "\n" + Message + "\n");
-         logFile.Flush ();
-      }
-   }
+   public EvalException (string message) : base (message) { }
 }
 
 public class Evaluator {
@@ -74,9 +66,8 @@ public class Evaluator {
       var op = mOperators.Pop ();
       double f1 = mOperands.Pop (), f2;
       if (op is TOpArithmetic arith) {
-         try {
-            f2 = mOperands.Pop ();
-         } catch (Exception) { throw new EvalException ("Too few operands"); }
+         if (mOperands.Count == 0) throw new EvalException ("Too few operands");
+         f2 = mOperands.Pop ();
          mOperands.Push (arith.Evaluate (f2, f1));
       } else mOperands.Push (op is TOpUnary un ? un.Evaluate (f1) : ((TOpFunction)op).Evaluate (f1));
    }

@@ -14,8 +14,19 @@ class Program {
          } catch (Exception e) {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine (e.Message);
+            LogException (e.Message);
          }
          Console.ResetColor ();
+      }
+
+      void LogException (string message) {
+         string dir = "..\\Log";
+         if (!Directory.Exists (dir)) Directory.CreateDirectory (dir);
+         using (var logFile = new StreamWriter ($"../Log/{DateTime.Now.Day}_{DateTime.Now.Hour}_{DateTime.Now.Minute}_{DateTime.Now.Second}.txt", true)) {
+            logFile.WriteLine (DateTime.Now);
+            logFile.WriteLine (">" + Evaluator.mText + "\n" + message + "\n");
+            logFile.Flush ();
+         }
       }
    }
 }
