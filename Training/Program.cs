@@ -21,13 +21,12 @@ internal class Program {
       p.Enqueue (15);
       p.Enqueue (86);
       p.Enqueue (53);
-      WriteLine (p.Dequeue ());
-      WriteLine (q.Dequeue ());
+      WriteLine (p);
    }
 }
 
 #region class PriorityQueue<T> --------------------------------------------------------------------
-public class PriorityQueue<T> : IEnumerable<T> where T : IComparable<T> {
+public class PriorityQueue<T> : IEnumerable where T : IComparable<T> {
    #region Constructors ---------------------------------------------
    /// <summary>Construct instance of Priority Queue<typeparamref name="T"/></summary>
    public PriorityQueue () => mList = new () { default };
@@ -53,7 +52,16 @@ public class PriorityQueue<T> : IEnumerable<T> where T : IComparable<T> {
    }
 
    /// <summary>Returns string PriorityQueue elements separated by commas</summary>
-   public override string ToString () => string.Join (", ", mList.ToArray ()[1..]);
+   public override string ToString () {
+      int height = 1;
+      int leftspace = Count, rightspace = 1;
+      string str = "";
+      foreach (var x in SiftThrough ()) {
+         str += new string (' ', height % 2 == 0 ? leftspace : height == 1 ? Count + 3 : rightspace) + x + (height % 2 == 0 ? "" : "\n");
+         height++; leftspace--; rightspace += 2;
+      }
+      return str;
+   }
    #endregion
 
    #region Properties -----------------------------------------------
@@ -74,6 +82,14 @@ public class PriorityQueue<T> : IEnumerable<T> where T : IComparable<T> {
          child = min.CompareTo (mList[child * 2]) == 0 ? child * 2 : child * 2 + 1;
       }
       mList.RemoveAt (child);
+   }
+
+   /// <summary>Sifts through Priority Queue and returns elements one by one.</summary>
+   public IEnumerable SiftThrough () {
+      var copy = mList.ToList ();
+      for (int child = 1; child < copy.Count; child++)
+         if (!IsEmpty) yield return Dequeue ();
+      mList = copy;
    }
 
    /// <summary>Sift up to place smallest element on top of heap tree</summary>
