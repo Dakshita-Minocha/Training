@@ -51,20 +51,34 @@ public class PriorityQueue<T> : IEnumerable where T : IComparable<T> {
       SiftUp ();
    }
 
-   /// <summary>Returns string PriorityQueue elements separated by commas</summary>
+   /// <summary>Returns PriorityQueue as Binary Tree</summary>
    public override string ToString () {
-      int height = 1;
-      int leftspace = Count, rightspace = 1;
-      string str = "";
-      foreach (var x in SiftThrough ()) {
-         str += new string (' ', height % 2 == 0 ? leftspace : height == 1 ? Count + 3 : rightspace) + x + (height % 2 == 0 ? "" : "\n");
-         height++; leftspace--; rightspace += 2;
+      if (IsEmpty) return "";
+      int height = Height, count = 0, level = 2, indent = (int)Math.Pow (2, (--height - 1) * 2) + 2, space = indent;
+      string str = $"{string.Concat (Enumerable.Repeat (" ", indent))}{mList[++count],2}\n{string.Concat (Enumerable.Repeat (" ", indent / 2))}";
+      indent = (indent + 2) / 2 - 1;
+      for (; count < Count;) {
+         str += $"{mList[++count],2}{string.Concat (Enumerable.Repeat (" ", space))}"; // indent between numbers
+         if (count == Math.Pow (2, level) - 1) {
+            level++;
+            space = indent;
+            indent = (indent + 2) / 2 - 1;
+            str += $"\n{string.Concat (Enumerable.Repeat (" ", level == height + 1 ? 0 : indent))}"; // next line indentation
+         }
       }
       return str;
    }
    #endregion
 
    #region Properties -----------------------------------------------
+   /// <summary>Height of tree</summary>
+   public int Height {
+      get {
+         int height = 0;
+         while (Math.Pow (2, height++) <= mList.Count) ;
+         return --height;
+      }
+   }
    /// <summary>Number of elements in Priority Queue</summary>
    public int Count { get; private set; }
 
@@ -82,14 +96,6 @@ public class PriorityQueue<T> : IEnumerable where T : IComparable<T> {
          child = min.CompareTo (mList[child * 2]) == 0 ? child * 2 : child * 2 + 1;
       }
       mList.RemoveAt (child);
-   }
-
-   /// <summary>Sifts through Priority Queue and returns elements one by one.</summary>
-   public IEnumerable SiftThrough () {
-      var copy = mList.ToList ();
-      for (int child = 1; child < copy.Count; child++)
-         if (!IsEmpty) yield return Dequeue ();
-      mList = copy;
    }
 
    /// <summary>Sift up to place smallest element on top of heap tree</summary>
